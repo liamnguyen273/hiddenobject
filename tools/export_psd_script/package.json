@@ -1,0 +1,18 @@
+{
+  "name": "export_psd_script",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "exec": "tsc ./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "types-for-adobe": "^7.0.12"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}

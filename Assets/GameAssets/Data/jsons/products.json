@@ -1,0 +1,86 @@
+{
+	"noads01_stickerbook": {
+		"id": "noads01_stickerbook",
+		"listingName": "No Ads",
+		"description": "No Ads, forever!",
+		"type": "noads",
+		"isConsumable": false,
+		"isIap": true,
+		"price": -1,
+		"currency": "real",
+		"buyResolution": "set_own,add_resource",
+		"resolutionData": "none,100 stamp"
+	},
+	"powerup_bundle_1": {
+		"id": "powerup_bundle_1",
+		"listingName": "Backpack 1",
+		"description": "5 lookup and 5 compass powerups",
+		"type": "powerups",
+		"isConsumable": true,
+		"isIap": true,
+		"price": -1,
+		"currency": "real",
+		"buyResolution": "add_resource",
+		"resolutionData": "5 lookup&5 compass"
+	},
+	"powerup_bundle_2": {
+		"id": "powerup_bundle_2",
+		"listingName": "Backpack 2",
+		"description": "10 lookup and 10 compass powerups",
+		"type": "powerups",
+		"isConsumable": true,
+		"isIap": true,
+		"price": -1,
+		"currency": "real",
+		"buyResolution": "add_resource",
+		"resolutionData": "10 lookup&10 compass"
+	},
+	"powerup_bundle_3": {
+		"id": "powerup_bundle_3",
+		"listingName": "Backpack 3",
+		"description": "15 lookup and 15 compass powerups",
+		"type": "powerups",
+		"isConsumable": true,
+		"isIap": true,
+		"price": -1,
+		"currency": "real",
+		"buyResolution": "add_resource",
+		"resolutionData": "25 lookup&25 compass"
+	},
+	"powerup_bundle_4": {
+		"id": "powerup_bundle_4",
+		"listingName": "Backpack 4",
+		"description": "20 lookup and 20 compass powerups",
+		"type": "powerups",
+		"isConsumable": true,
+		"isIap": true,
+		"price": -1,
+		"currency": "real",
+		"buyResolution": "add_resource",
+		"resolutionData": "50 lookup&50 compass"
+	},
+	"powerup_bundle_5": {
+		"id": "powerup_bundle_5",
+		"listingName": "Backpack 5",
+		"description": "30 lookup and 30 compass powerups",
+		"type": "powerups",
+		"isConsumable": true,
+		"isIap": true,
+		"price": -1,
+		"currency": "real",
+		"buyResolution": "add_resource",
+		"resolutionData": "85 lookup&85 compass"
+	},
+	"powerup_bundle_6": {
+		"id": "powerup_bundle_6",
+		"listingName": "Backpack 6",
+		"description": "50 lookup and 50 compass powerups",
+		"type": "powerups",
+		"isConsumable": true,
+		"isIap": true,
+		"price": -1,
+		"currency": "real",
+		"buyResolution": "add_resource",
+		"resolutionData": "100 lookup&100 compass"
+	}
+}

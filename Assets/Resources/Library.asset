@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2204bf128383ced4f8a374a536984a4c, type: 3}
+  m_Name: Library
+  m_EditorClassIdentifier: 
+  soundCategories:
+  - 
+  musicCategories:
+  - 
+  Sounds:
+  - {fileID: 11400000, guid: 5f551587cea25704f8f9fc69ee6770b6, type: 2}
+  - {fileID: 11400000, guid: 4353cfe7c271f4e44b2024b3265b96d9, type: 2}
+  - {fileID: 11400000, guid: a2565c78bf5fc0245a7b37f27a6c3124, type: 2}
+  Music:
+  - {fileID: 11400000, guid: 4b882da646173ea4b86bd7b88b923689, type: 2}
+  - {fileID: 11400000, guid: 75c7cdebc5ac36a45b0a7f201c967936, type: 2}
+  - {fileID: 11400000, guid: 11c4291e6499c52439f3bd661eb31dc1, type: 2}
+  - {fileID: 11400000, guid: fb3321a67258acb4eb1562f014bbbfb9, type: 2}
+  useCustomNames: 0
+  generatedName: Library
+  musicEnum: LibraryMusic
+  musicEnumGenerated: LibraryMusic
+  musicNamespace: 
+  musicNamespaceGenerated: 
+  soundEnum: LibrarySounds
+  soundEnumGenerated: LibrarySounds
+  soundNamespace: 
+  soundNamespaceGenerated: 
+  soundCategoriesToList:
+  - name: 
+    files:
+    - {fileID: 11400000, guid: 5f551587cea25704f8f9fc69ee6770b6, type: 2}
+    - {fileID: 11400000, guid: 4353cfe7c271f4e44b2024b3265b96d9, type: 2}
+    - {fileID: 11400000, guid: a2565c78bf5fc0245a7b37f27a6c3124, type: 2}
+    foldout: 1
+  musicCategoriesToList:
+  - name: 
+    files:
+    - {fileID: 11400000, guid: 4b882da646173ea4b86bd7b88b923689, type: 2}
+    - {fileID: 11400000, guid: 75c7cdebc5ac36a45b0a7f201c967936, type: 2}
+    - {fileID: 11400000, guid: 11c4291e6499c52439f3bd661eb31dc1, type: 2}
+    - {fileID: 11400000, guid: fb3321a67258acb4eb1562f014bbbfb9, type: 2}
+    foldout: 1
