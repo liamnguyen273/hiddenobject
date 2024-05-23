@@ -7,6 +7,36 @@
       "dependencies": {},
       "hash": "80a63bd5b33c0d88b3fef19cb6b13547061d0a4f"
     },
+    "com.google.external-dependency-manager": {
+      "version": "file:../Dependancies/com.google.external-dependency-manager-1.2.177.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
+    "com.google.firebase.analytics": {
+      "version": "file:../Dependancies/com.google.firebase.analytics-11.6.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "11.6.0"
+      }
+    },
+    "com.google.firebase.app": {
+      "version": "file:../Dependancies/com.google.firebase.app-11.6.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.177"
+      }
+    },
+    "com.google.firebase.remote-config": {
+      "version": "file:../Dependancies/com.google.firebase.remote-config-11.6.0.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.google.firebase.app": "11.6.0"
+      }
+    },
     "com.olegknyazev.softmask": {
       "version": "https://github.com/olegknyazev/SoftMask.git?path=/Packages/com.olegknyazev.softmask#1.7.0",
       "depth": 0,
