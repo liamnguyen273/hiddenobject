@@ -4,6 +4,7 @@ using com.brg.Common.UI;
 using com.brg.Common.UI.Hud;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace com.tinycastle.StickerBooker
 {
@@ -14,7 +15,8 @@ namespace com.tinycastle.StickerBooker
         [Header("Level data/progresses")]
         [SerializeField] private TextLocalizer _levelText;
         [SerializeField] private TextLocalizer _progressText;
-        [SerializeField] private GameObject _progressBar;
+        [SerializeField] private Image _progressImage;
+        // [SerializeField] private GameObject _progressBar;
         
         [Header("Buttons")]
         [SerializeField] private GameObject _noAdButton;
@@ -155,7 +157,9 @@ namespace com.tinycastle.StickerBooker
 
         public void UpdateProgress(int current, int total)
         {
-            _progressText.RawString = $"{current:00}/{total:00}";
+            total = total == 0 ? 1 : total;
+            _progressText.RawString = $"{current:00}/{total:00}\nFound";
+            _progressImage.fillAmount = (float)current / total;
         }
 
         public void SetLevelText(string levelName)

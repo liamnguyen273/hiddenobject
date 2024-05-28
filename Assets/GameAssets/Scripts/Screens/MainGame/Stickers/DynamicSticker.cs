@@ -12,10 +12,10 @@ namespace com.tinycastle.StickerBooker
         [Header("Sticker")]
         [SerializeField] private RectTransform _appearanceRect;
         [SerializeField] private Image _appearanceImage;
-
-        [Header("Numbering")]
-        [SerializeField] private RectTransform _numbering;
-        [SerializeField] private TextLocalizer _number;
+        
+        // [Header("Numbering")]
+        // [SerializeField] private RectTransform _numbering;
+        // [SerializeField] private TextLocalizer _number;
 
         [Header("Params")]
         [SerializeField] private float _baseMovementUnit = 1000f;
@@ -64,6 +64,8 @@ namespace com.tinycastle.StickerBooker
 
         public bool HasLink => _staticSticker != null;
 
+        public StaticSticker LinkedStaticSticker => _staticSticker;
+
         public event Action OnStickEvent;
         public event Action OnStickFailedEvent;
         public event Action OnDragStart;
@@ -85,14 +87,26 @@ namespace com.tinycastle.StickerBooker
             _staticSticker = staticSticker;
             
             RefreshAppearance();
-
+            
+            if (_staticSticker != null)
+            {
+                _staticSticker.SetInteractable(true);
+            }
+            
             ManualInteractable = true;
         }
 
         public void ResetSticker()
         {
             _appearanceImage.sprite = null;
+            
+            if (_staticSticker != null)
+            {
+                _staticSticker.SetInteractable(false);
+            }
+            
             _staticSticker = null;
+            
             gameObject.SetActive(false);
         }
 
@@ -250,9 +264,9 @@ namespace com.tinycastle.StickerBooker
         private void RefreshAppearance()
         {
             _appearanceImage.sprite = _definition.Sprite;
-            _appearanceImage.SetNativeSize();
-            _numbering.anchoredPosition = _definition.AbsoluteNumberingPosition;
-            _number.RawString = _definition.Number.ToString();
+            // _appearanceImage.SetNativeSize();
+            // _numbering.anchoredPosition = _definition.AbsoluteNumberingPosition;
+            // _number.RawString = _definition.Number.ToString();
         }
 
         private bool CheckAlignTarget()
@@ -295,7 +309,7 @@ namespace com.tinycastle.StickerBooker
             AudioManager.PlaySound(LibrarySounds.Sticker);
             
             GM.Instance.Vibrate();
-            GM.Instance.MainGame.OnStickerStickToTarget(this, _dragByPlayer);
+            // GM.Instance.MainGame.OnStickerStickToTarget(this, _dragByPlayer);
             
             // GetComponent<Image>().raycastTarget = true;
             

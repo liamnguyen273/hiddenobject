@@ -102,9 +102,10 @@ namespace com.tinycastle.StickerBooker
             {
                 ShowAd();
             }
+            // TEMP
             else if (_waitTimer <= 0f)
             {
-                OnAdWaitTimeout();
+                OnAdCompleted(true);
             }
         }
 
@@ -221,7 +222,9 @@ namespace com.tinycastle.StickerBooker
 
         private void StartAdWaitTimer()
         {
-            _waitTimer = _request.WaitTime;
+            // TODO
+            // _waitTimer = _request.WaitTime;
+            _waitTimer = 1f;
             _adState = AdState.WAITING;
         }
 

@@ -18,6 +18,8 @@ namespace com.tinycastle.StickerBooker
         public void Activate()
         {
             _appearance.SetGOActive(true);
+            _stemManager.MuteAll();
+            
             FetchTimings();
             ResetAdCounter();
             
@@ -58,11 +60,13 @@ namespace com.tinycastle.StickerBooker
 
             _popupPerInterCount = (int)GM.Instance.RemoteConfigs.GetValue(GameRemoteConfigs.REMOVEAD_POPUPFREQUENCY, 10);
             
+            _stemManager.Initialize();
             StartGame();
         }
 
         public void Deactivate()
         {
+            _stemManager.Deinitialize();
             _appearance.SetGOActive(false);
             GM.Instance.Player.OnOwnEvent -= OnOwn;
             GM.Instance.HasBlockingElementsEvent -= OnHasBlockingElements;
@@ -128,8 +132,11 @@ namespace com.tinycastle.StickerBooker
             
             // Remove static sticker book-keep
             _allStickers = null;
-            _leftOverStickers = null;
-            _attachedStickers = null;
+            _findStickers = null;
+            _foundStickers = null;
+            _allFindStickers = null;
+            // _leftOverStickers = null;
+            // _attachedStickers = null;
             
             // Remove power-ups
             ResolvePowerupTimeout();
@@ -194,12 +201,12 @@ namespace com.tinycastle.StickerBooker
         
         private void PlayThemeMusic()
         {
-            AudioManager.PlayMusic(GM.Instance.GetTheme() == GlobalConstants.CHRISTMAS_THEME ? LibraryMusic.LevelXmasMusic : LibraryMusic.LevelMusic);
+            // AudioManager.PlayMusic(GM.Instance.GetTheme() == GlobalConstants.CHRISTMAS_THEME ? LibraryMusic.LevelXmasMusic : LibraryMusic.LevelMusic);
         }
         
         private void StopThemeMusic()
         {
-            AudioManager.StopMusic(GM.Instance.GetTheme() == GlobalConstants.CHRISTMAS_THEME ? LibraryMusic.LevelXmasMusic : LibraryMusic.LevelMusic);
+            // AudioManager.StopMusic(GM.Instance.GetTheme() == GlobalConstants.CHRISTMAS_THEME ? LibraryMusic.LevelXmasMusic : LibraryMusic.LevelMusic);
         }
     }
 }

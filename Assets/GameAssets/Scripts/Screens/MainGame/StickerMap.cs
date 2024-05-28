@@ -23,10 +23,10 @@ namespace com.tinycastle.StickerBooker
         [FormerlySerializedAs("_content")]
         [Header("Full image things")] 
         [SerializeField] private RectTransform _scrollContent;
-        [SerializeField] private RectTransform _fullMapGroup;
+        // [SerializeField] private RectTransform _fullMapGroup;
         [SerializeField] private ParticleSystem _fullMapParticleSystem;
         [SerializeField] private Image _outlineImage;
-        [SerializeField] private Image _fullMapImage;
+        // [SerializeField] private Image _fullMapImage;
 
         [Header("Params")] 
         [SerializeField] private float _contentPadX = 252f;
@@ -55,12 +55,12 @@ namespace com.tinycastle.StickerBooker
             _scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _mapSizeX + _contentPadX);
             _scrollContent.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _mapSizeY + _contentPadY);
             
-            // _outlineImage.sprite = thumbnail;
-            _fullMapImage.sprite = fullImageSprite;
+            _outlineImage.sprite = fullImageSprite;
+            // _fullMapImage.sprite = fullImageSprite;
             transform.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _mapSizeX);
             transform.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _mapSizeY);
 
-            var rect = _fullMapImage.GetComponent<RectTransform>().rect;
+            // var rect = _fullMapImage.GetComponent<RectTransform>().rect;
             // var vec2 = new Vector2(rect.width, rect.height) / 2;
 
             var shape = _fullMapParticleSystem.shape;
@@ -75,6 +75,8 @@ namespace com.tinycastle.StickerBooker
                 sticker.SetSticker(vec2, def);
                 _allStickers[number] = sticker;
             }
+            
+            ShowFullMap();
         }
 
         public void Restart()
@@ -99,7 +101,7 @@ namespace com.tinycastle.StickerBooker
             
             // Remove sprites
             _outlineImage.sprite = null;
-            _fullMapImage.sprite = null;
+            // _fullMapImage.sprite = null;
             
             _allStickers = null;
 
@@ -116,23 +118,24 @@ namespace com.tinycastle.StickerBooker
 
         public void AnimateFullMap(Action onComplete)
         {
-            if (_fillTween != null)
-            {
-                _fillTween.Kill();
-                _fillTween = null;
-            }
-
-            _fillTween = DOTween.To(() => _fullMapGroup.rect.height,
-                    (x) => { _fullMapGroup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, x); }, _mapSizeY,
-                    _fillTime)
-                .SetEase(Ease.Linear)
-                .OnStart(() => { _fullMapParticleSystem.Play(); })
-                .OnComplete(() =>
-                {
-                    _fullMapParticleSystem.Stop();
-                    _fillTween = null;
-                    onComplete?.Invoke();
-                });
+            onComplete?.Invoke();
+            // if (_fillTween != null)
+            // {
+            //     _fillTween.Kill();
+            //     _fillTween = null;
+            // }
+            //
+            // _fillTween = DOTween.To(() => _fullMapGroup.rect.height,
+            //         (x) => { _fullMapGroup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, x); }, _mapSizeY,
+            //         _fillTime)
+            //     .SetEase(Ease.Linear)
+            //     .OnStart(() => { _fullMapParticleSystem.Play(); })
+            //     .OnComplete(() =>
+            //     {
+            //         _fullMapParticleSystem.Stop();
+            //         _fillTween = null;
+            //         onComplete?.Invoke();
+            //     });
         }
 
         public Image GetHinterImage()
@@ -142,12 +145,12 @@ namespace com.tinycastle.StickerBooker
 
         public void ShowFullMap()
         {
-            _fullMapGroup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _mapSizeY);
+            // _fullMapGroup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, _mapSizeY);
         }
 
         public void HideFullMap()
         {
-            _fullMapGroup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0);
+            // _fullMapGroup.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 0);
         }
     }
 }

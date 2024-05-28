@@ -48,15 +48,21 @@ namespace com.tinycastle.StickerBooker
 
         [Header("Tutorials")]
         [SerializeField] private TutorialCursor _cursor;
+
+        [Header("Others")] 
+        [SerializeField] private StemManager _stemManager;
         
         // Level book-keepers
         private string _currentId = null;
         private LevelEntry _entry = null;
         private LevelAssetHandle _assetHandle = null;
 
-        private List<StaticSticker> _leftOverStickers;
-        private List<StaticSticker> _attachedStickers;
+        // private List<StaticSticker> _leftOverStickers;
+        // private List<StaticSticker> _attachedStickers;
+        private List<StaticSticker> _findStickers;
+        private List<StaticSticker> _foundStickers;
         private List<StaticSticker> _allStickers;
+        private List<StaticSticker> _allFindStickers;
         
         private GameState _state = GameState.NONE;
         private float _gameTimer = -1;
@@ -80,7 +86,7 @@ namespace com.tinycastle.StickerBooker
 
         public bool IsPlayingMultiplayer => _state > GameState.LOAD_DONE && _state < GameState.COMPLETING &&
                                             (_entry != null && _entry.IsMultiplayer);
-        
+
         private void Update()
         {
             var dt = Time.deltaTime;
@@ -118,33 +124,32 @@ namespace com.tinycastle.StickerBooker
             return list.Count == 0 ? null : list[GM.Instance.Rng.GetInteger(0, list.Count)];
         }
         
-        public void OnStickerStickToTarget(DynamicSticker dynamicSticker, bool byPlayer)
+        // public void OnStickerStickToTarget(DynamicSticker dynamicSticker, bool byPlayer)
+        public void OnStickerFound(StaticSticker staticSticker, bool byPlayer)
         {
-            var index = Array.IndexOf(_dynamicStickers, dynamicSticker);
-
+            var index = Array.FindIndex(_dynamicStickers, x => x.LinkedStaticSticker == staticSticker);
+            
             if (index > -1)
             {
-                if (dynamicSticker.GetLinkedStaticSticker() == null)
-                {
-                    Log.Warn($"Dynamic sticker index {index} is missing a link but managed to call OnStickerStickerToTarget." +
-                             $"Please check. It will disappear as normal.");
-                    return;
-                }
-
-                var staticSticker = dynamicSticker.GetLinkedStaticSticker();
-
-                staticSticker.SetState(StaticStickerState.TEMP_HIDDEN);
-                GM.Instance.Effects.PlayStickingAnimation(staticSticker, () =>
-                {
-                    // TODO update present bar
-                    staticSticker.SetState(StaticStickerState.COLORED);
-                    staticSticker.PlayPulseTween();
-                });
+                var dynamicSticker = _dynamicStickers[index];
+                
+                // if (dynamicSticker.GetLinkedStaticSticker() == null)
+                // {
+                //     Log.Warn($"Dynamic sticker index {index} is missing a link but managed to call OnStickerFound." +
+                //              $"Please check. It will disappear as normal.");
+                //     return;
+                // }
+                
+                // staticSticker.SetState(StaticStickerState.TEMP_HIDDEN);
+                staticSticker.SetInteractable(false);
+                staticSticker.SetState(StaticStickerState.COLORED);
+                staticSticker.PlayPulseTween();
+                
+                _foundStickers.Add(staticSticker);
+                
+                GM.Instance.Effects.PlayStickingParticles(staticSticker.transform, Vector3.zero);
                     
-                // Add to attached
-                _attachedStickers.Add(staticSticker);
-                    
-                _hud.UpdateProgress(_attachedStickers.Count, _allStickers.Count);
+                _hud.UpdateProgress(_foundStickers.Count, _allFindStickers.Count);
 
                 ResolvePowerupOnPlayerStick(dynamicSticker);
                 dynamicSticker.ResetSticker();
@@ -153,6 +158,14 @@ namespace com.tinycastle.StickerBooker
                 if (byPlayer)
                 {
                     GM.Instance.Player.AddResource(GlobalConstants.CHEST_PROGRESS_RESOURCE, 1, doNotSave: true);
+                }
+                
+                // Play sound
+                var stemIndex = GetStemIndex(_foundStickers.Count, _allFindStickers.Count);
+                CLog.Log($"Stem index: {stemIndex}");
+                if (stemIndex >= 0)
+                {
+                    _stemManager.Play(false, stemIndex);
                 }
                 
                 // Refill
@@ -178,7 +191,7 @@ namespace com.tinycastle.StickerBooker
             }
             else
             {
-                Log.Warn("Sticker " + dynamicSticker + " does not exist in the map's bookkeeping.");
+                // Log.Warn("Sticker " + dynamicSticker + " does not exist in the map's bookkeeping.");
             }
         }
         
@@ -216,7 +229,7 @@ namespace com.tinycastle.StickerBooker
 
             GM.Instance.Events.MakeEvent(GameEvents.BACK_LEVEL)
                 .Add("level", _currentId)
-                .Add("leftover_sticker_number", _leftOverStickers?.Count ?? 0)
+                .Add("leftover_sticker_number", _findStickers?.Count ?? 0)
                 .SendEvent();
             
             // Save progress
@@ -310,15 +323,17 @@ namespace com.tinycastle.StickerBooker
                 MultiplayerModule.SetOpponentRandomly();
             }
             
-            if (_leftOverStickers.Count > 0)
+            if (_findStickers.Count > 0)
             {
                 // In game
+                _stemManager.Play(true, 0);
                 EnterPlayMode();
                 _replayButton.SetActive(false);
             }
             else
             {
                 // Game completed, enter review mode
+                _stemManager.PlayAll();
                 EnterReviewMode();
                 _replayButton.SetActive(true);
             }
@@ -334,10 +349,12 @@ namespace com.tinycastle.StickerBooker
 
             GM.Instance.Events.MakeEvent(GameEvents.START_LEVEL)
                 .Add("level", _currentId)
-                .Add("sticker_number", _attachedStickers.Count.ToString())
+                .Add("sticker_number", _findStickers.Count.ToString())
                 .SendEvent();
 
-            if (!GM.Instance.Player.GetTutorialPlayed() && _attachedStickers.Count == 0 && _currentId == "level_1")
+            // TODO
+            // if (!GM.Instance.Player.GetTutorialPlayed() && _attachedStickers.Count == 0 && _currentId == "level_1")
+            if (false)
             {
                 GameState = GameState.TUTORIAL;
                 DOVirtual.DelayedCall(0.75f, StartTutorial);
@@ -454,15 +471,15 @@ namespace com.tinycastle.StickerBooker
             {
                 if (dynamicSticker.HasLink) continue;
                 
-                if (_leftOverStickers == null || _leftOverStickers.Count == 0)
+                if (_findStickers == null || _findStickers.Count == 0)
                 {
                     dynamicSticker.ResetSticker();
                     continue;
                 }
                     
                 // Fill with first of left over
-                var sticker = _leftOverStickers[0];
-                _leftOverStickers.RemoveAt(0);
+                var sticker = _findStickers[0];
+                _findStickers.RemoveAt(0);
                 dynamicSticker.Link(sticker);
 
                 // Positioning
@@ -473,7 +490,7 @@ namespace com.tinycastle.StickerBooker
 
         private bool EvaluateCompletedStickers()
         {
-            return _leftOverStickers.Count <= 0
+            return _findStickers.Count <= 0
                    && _dynamicStickers.All(x => !x.HasLink);
         }
 
@@ -577,6 +594,41 @@ namespace com.tinycastle.StickerBooker
             var popup = GM.Instance.Popups.GetPopup<PopupBehaviourWinMultiplayer>(out var behaviour);
             behaviour.SetInfo(_entry, opponentName, playerScore, opponentScore, win);
             popup.Show();
+        }
+
+        private int GetStemIndex(int filledCount, int total)
+        {
+            if (total == 10)
+            {
+                return filledCount switch
+                {
+                    1 => 1,
+                    2 => 2,
+                    4 => 3,
+                    6 => 4,
+                    8 => 5,
+                    9 => 6,
+                    10 => 7,
+                    _ => -1
+                };
+            }
+            
+            if (total == 20)
+            {
+                return filledCount switch
+                {
+                    1 => 1,
+                    4 => 2,
+                    8 => 3,
+                    12 => 4,
+                    15 => 5,
+                    17 => 6,
+                    20 => 7,
+                    _ => -1
+                };
+            }
+            
+            return -1;
         }
     }
 }

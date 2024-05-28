@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using com.brg.Common;
@@ -67,36 +68,53 @@ namespace com.tinycastle.StickerBooker
             var attachedSet = attachedStickers.ToHashSet();
             
             _allStickers = stickerList;
+            _allFindStickers = new List<StaticSticker>();
+            _findStickers = new List<StaticSticker>();
+            _foundStickers = new List<StaticSticker>();
             
-            if (shouldPlayNormally)
+            var seed = 19823046 + _entry.SortOrder * 100 + _entry.SortOrder;
+            var rng = new System.Random(seed);
+            var total = stickerList.Count > 50 ? 20 : 10;
+                
+            for (var i = 0; i < total; ++i)
             {
-                _leftOverStickers = stickerList
-                    .Where(x => !attachedSet.Contains(x.GetDefinition().Number))
-                    .OrderBy(x => x.GetDefinition().Number)
-                    .ToList();
-
-                _attachedStickers = stickerList
-                    .Where(x => attachedSet.Contains(x.GetDefinition().Number))
-                    .ToList();
+                var index = rng.Next(0, _allStickers.Count);
+                var sticker = _allStickers[index];
+                _allFindStickers.Add(sticker);
+                _findStickers.Add(sticker);
             }
-            else
-            {
-                _leftOverStickers = new List<StaticSticker>();    // Empty
-                _attachedStickers = stickerList.ToList();   // Clone
-            }
+            
+            // if (shouldPlayNormally)
+            // {
+            //     _leftOverStickers = stickerList
+            //         .Where(x => !attachedSet.Contains(x.GetDefinition().Number))
+            //         .OrderBy(x => x.GetDefinition().Number)
+            //         .ToList();
+            //
+            //     _attachedStickers = stickerList
+            //         .Where(x => attachedSet.Contains(x.GetDefinition().Number))
+            //         .ToList();
+            // }
+            // else
+            // {
+            //     _leftOverStickers = new List<StaticSticker>();    // Empty
+            //     _attachedStickers = stickerList.ToList();   // Clone
+            // }
 
             // Toggle states of stickers
-            foreach (var sticker in _attachedStickers)
+            foreach (var sticker in _allStickers)
             {
                 sticker.SetState(StaticStickerState.COLORED);
             }
             
-            foreach (var sticker in _leftOverStickers)
-            {
-                sticker.SetState(StaticStickerState.OUTLINE);
-            }
+            // TODO
+            // foreach (var sticker in _leftOverStickers)
+            // {
+            //     sticker.SetState(StaticStickerState.OUTLINE);
+            // }
 
-            _hud.UpdateProgress(_attachedStickers.Count, _allStickers.Count);
+            // _hud.UpdateProgress(_attachedStickers.Count, _allStickers.Count);
+            _hud.UpdateProgress(_foundStickers.Count, _allFindStickers.Count);
         }
         
         private void LoadProgress(out bool completed, out bool hasProgress, out int time, out int[] attachedStickers)
@@ -104,40 +122,45 @@ namespace com.tinycastle.StickerBooker
             GM.Instance.Player.GetLevelState(_currentId, out var completion, out hasProgress, out var progress);
             
             completed = completion.Completed;
-            time = completion.Completed ? completion.BestTime : progress.CurrentTime;
-            attachedStickers = (_entry.IsTimeAttack || _entry.IsMultiplayer) ? new int[0] : progress.AttachedStickers ?? new int[0];
-            
-            Log.Info($"Level progress loaded for level {_currentId}: Completion: {completed}, Time: {time}, Attached sticker count: {attachedStickers.Length}");
+            // time = completion.Completed ? completion.BestTime : progress.CurrentTime;
+            // attachedStickers = (_entry.IsTimeAttack || _entry.IsMultiplayer) ? new int[0] : progress.AttachedStickers ?? new int[0];
+            //
+            // Log.Info($"Level progress loaded for level {_currentId}: Completion: {completed}, Time: {time}, Attached sticker count: {attachedStickers.Length}");
+            hasProgress = false;
+            time = 0;
+            attachedStickers = Array.Empty<int>();
         }
         
         private void SaveProgress(bool forceSave = false)
         {
             if (_entry.IsTimeAttack || _entry.IsMultiplayer) return;
-
-            if (CanonicalState != GameState.IN_GAME)
-            {
-                Log.Warn($"Game state is {CanonicalState}, should not save progress at this state.");
-                return;
-            }
             
-            if (forceSave) _saveProgressMeter = 999;
-            else ++_saveProgressMeter;
+            // TODO
             
-            if (_saveProgressMeter < 4) return;
-            
-            Log.Info($"Level progress save requested for level ${_currentId}");
-            
-            var content = _attachedStickers.Select(x => x.GetDefinition().Number).ToArray();
-            var time = _gameTimer;
-            
-            GM.Instance.Player.SetLevelProgress(_currentId, new LevelProgress()
-            {
-                CurrentTime = (int)time,
-                AttachedStickers = content
-            });
-            _saveProgressMeter = 0;
-            
-            GM.Instance.Player.RequestSaveData(true, false, false);
+            // if (CanonicalState != GameState.IN_GAME)
+            // {
+            //     Log.Warn($"Game state is {CanonicalState}, should not save progress at this state.");
+            //     return;
+            // }
+            //
+            // if (forceSave) _saveProgressMeter = 999;
+            // else ++_saveProgressMeter;
+            //
+            // if (_saveProgressMeter < 4) return;
+            //
+            // Log.Info($"Level progress save requested for level ${_currentId}");
+            //
+            // var content = _attachedStickers.Select(x => x.GetDefinition().Number).ToArray();
+            // var time = _gameTimer;
+            //
+            // GM.Instance.Player.SetLevelProgress(_currentId, new LevelProgress()
+            // {
+            //     CurrentTime = (int)time,
+            //     AttachedStickers = content
+            // });
+            // _saveProgressMeter = 0;
+            //
+            // GM.Instance.Player.RequestSaveData(true, false, false);
         }
 
         private void SaveLevelComplete()

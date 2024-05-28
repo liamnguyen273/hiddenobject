@@ -3,7 +3,9 @@ using com.brg.Common.Localization;
 using com.brg.Common.Logging;
 using com.brg.Utilities;
 using DG.Tweening;
+using JSAM;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace com.tinycastle.StickerBooker
@@ -19,10 +21,11 @@ namespace com.tinycastle.StickerBooker
     {
         private const float Z_STEP = -10;
         
-        [SerializeField] private Image _outlineImage; 
+        // [SerializeField] private Image _outlineImage; 
         [SerializeField] private Image _filledImage; 
-        [SerializeField] private RectTransform _numbering; 
-        [SerializeField] private TextLocalizer _numberText;
+        [SerializeField] private CanvasGroup _canvasGroup; 
+        // [SerializeField] private RectTransform _numbering; 
+        // [SerializeField] private TextLocalizer _numberText;
 
         private RectTransform _rect;
         private StickerDefinition _cachedDef;
@@ -34,7 +37,7 @@ namespace com.tinycastle.StickerBooker
         private void Awake()
         {
             _rect = GetComponent<RectTransform>();
-            _outlineImage.sprite = null;
+            // _outlineImage.sprite = null;
             _filledImage.sprite = null;
         }
 
@@ -51,9 +54,10 @@ namespace com.tinycastle.StickerBooker
             _rect.anchoredPosition3D = Vector3.zero;
             
             _rect.localScale = Vector3.one;
-            _outlineImage.sprite = null;
+            // _outlineImage.sprite = null;
             _filledImage.sprite = null;
             SetState(StaticStickerState.OUTLINE);
+            _canvasGroup.interactable = false;
             
             gameObject.SetActive(false);
         }
@@ -69,12 +73,14 @@ namespace com.tinycastle.StickerBooker
             transform.localScale = Vector3.one;
 
             _rect.anchoredPosition3D = pos;
-            _outlineImage.sprite = definition.Sprite;
-            _outlineImage.SetNativeSize();
+            // _outlineImage.sprite = definition.Sprite;
+            // _outlineImage.SetNativeSize();
             _filledImage.sprite = definition.Sprite;
             _filledImage.SetNativeSize();
-            _numbering.anchoredPosition = definition.AbsoluteNumberingPosition;
-            _numberText.RawString = definition.Number.ToString();
+            // _numbering.anchoredPosition = definition.AbsoluteNumberingPosition;
+            // _numberText.RawString = definition.Number.ToString();
+
+            SetInteractable(false);
             
             name = $"Sticker {definition.Number:00} [{definition.Name}]";
         }
@@ -98,23 +104,29 @@ namespace com.tinycastle.StickerBooker
                 {
                     case StaticStickerState.COLORED:
                         gameObject.SetActive(true);
-                        _outlineImage.SetGOActive(false);
+                        // _outlineImage.SetGOActive(false);
                         _filledImage.SetGOActive(true);
-                        _numbering.SetGOActive(false);
+                        // _numbering.SetGOActive(false);
                         break;
                     case StaticStickerState.TEMP_HIDDEN:
                         gameObject.SetActive(false);
                         break;
                     case StaticStickerState.OUTLINE:
                         gameObject.SetActive(true);
-                        _outlineImage.SetGOActive(true);
+                        // _outlineImage.SetGOActive(true);
                         _filledImage.SetGOActive(false);
-                        _numbering.SetGOActive(true);
+                        // _numbering.SetGOActive(true);
                         break;
                     default:
                         break;
                 }
             }
+        }
+
+        public void SetInteractable(bool value)
+        {
+            _canvasGroup.interactable = value;
+            _canvasGroup.blocksRaycasts = value;
         }
                 
         public void StartHintEffect()
@@ -169,6 +181,17 @@ namespace com.tinycastle.StickerBooker
                 {
                     _pulsedTween = null;
                 }).Play();
+        }
+
+        public void OnPointerClick()
+        {
+            Debug.Log($"CLICKED {gameObject.name}");
+            // return;
+            AudioManager.PlaySound(LibrarySounds.Sticker);
+            
+            GM.Instance.Vibrate();
+            
+            GM.Instance.MainGame.OnStickerFound(this, true);
         }
     }
 }

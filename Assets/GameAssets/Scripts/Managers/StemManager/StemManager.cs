@@ -10,7 +10,6 @@ namespace com.tinycastle.StickerBooker
 {
     public class StemManager : MonoBehaviour, IStemInstrumentPlayer
     {
-
         [SerializeField] private StemData _stemData;
         [SerializeField] private AudioSource _audioSourcePrefab;
 
@@ -20,13 +19,13 @@ namespace com.tinycastle.StickerBooker
 
         private int _currentLayerIndex = 0;
 
-        private const int DEFAULT_VOLUME = 1;
-        private const float FADE_TIME = 0.5f;
+        private const float DEFAULT_VOLUME = 0.6f;
+        private const float FADE_TIME = 1.5f;
 
         private void Start() //Test code
         {
             SetStemData(_stemData);
-            Initialize();
+            // Initialize();
         }
 
         private void Update() //Test code
@@ -102,14 +101,20 @@ namespace com.tinycastle.StickerBooker
             }
         }
 
-        public void Play(params int[] instrumentIndexes)
+        public void Play(bool immediately, params int[] instrumentIndexes)
         {
             foreach (int index in instrumentIndexes)
             {
                 if (index >= 0 && index < _audioSourceUsing.Count)
                 {
-                    //_audioSourceUsing[index].volume = DEFAULT_VOLUME;
-                    _audioSourceUsing[index].DOFade(DEFAULT_VOLUME, FADE_TIME);
+                    if (immediately)
+                    {
+                        _audioSourceUsing[index].volume = DEFAULT_VOLUME;
+                    }
+                    else
+                    {
+                        _audioSourceUsing[index].DOFade(DEFAULT_VOLUME, FADE_TIME).Play();
+                    }
                 }
                 else
                 {
