@@ -88,7 +88,7 @@ namespace com.tinycastle.StickerBooker
         private void Awake()
         {
             Instance = this;
-            Application.targetFrameRate = -1;
+            Application.targetFrameRate = 120;
             CLog.ShouldLog = _shouldLog;
             
             _playerManager = new PlayerManager();
