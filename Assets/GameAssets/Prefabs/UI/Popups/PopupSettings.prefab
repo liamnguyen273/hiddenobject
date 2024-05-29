@@ -2400,6 +2400,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3173516534002516016, guid: 95006608259e76e4bbf1b297a8e6757f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: a500fb60a410ad94da88c29e75476663, type: 3}
     - target: {fileID: 6155981571516807039, guid: 95006608259e76e4bbf1b297a8e6757f, type: 3}
       propertyPath: m_Name
       value: UIButtonIconNew
@@ -2854,6 +2858,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3173516534002516016, guid: 95006608259e76e4bbf1b297a8e6757f, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7fba5ce3a02e3c940a9287cd5171e2b1, type: 3}
     - target: {fileID: 6155981571516807039, guid: 95006608259e76e4bbf1b297a8e6757f, type: 3}
       propertyPath: m_Name
       value: UIButtonIconNew
