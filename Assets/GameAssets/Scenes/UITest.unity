@@ -2155,7 +2155,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3113553194593395456, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 3113553194593395456, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2663,7 +2663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6002187529797238763, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 6002187529797238763, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3059,7 +3059,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7313755581149710235, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 7313755581149710235, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -3415,7 +3415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8369443255801745324, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 50
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 8369443255801745324, guid: 2a7ccf6b6c00dec48b610d94b43206e5, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -5636,11 +5636,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4633064642296649678, guid: 17d4a7682ee9cbb4a9f14b6d736f58e0, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4633064642296649678, guid: 17d4a7682ee9cbb4a9f14b6d736f58e0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8563972816273791635, guid: 17d4a7682ee9cbb4a9f14b6d736f58e0, type: 3}
       propertyPath: m_Pivot.x
@@ -6400,7 +6400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1482614325
 MonoBehaviour:
   m_ObjectHideFlags: 0
