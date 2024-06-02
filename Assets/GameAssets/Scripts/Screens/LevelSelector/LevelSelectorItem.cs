@@ -106,7 +106,7 @@ namespace com.tinycastle.StickerBooker
             }
             
             // Number is always available
-            _levelNumber.RawString = _entry.SortOrder.ToString();
+            _levelNumber.RawString = $"Level {_entry.SortOrder}";
             
             if (_state != State.UNPLAYABLE)
             {

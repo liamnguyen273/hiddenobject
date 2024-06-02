@@ -12,8 +12,8 @@ namespace com.tinycastle.StickerBooker
     public class PopupBehaviourSettings : UIPopupBehaviour
     {
         [SerializeField] private TextLocalizer _version;
-        [SerializeField] private LeanToggle _musicToggle;
-        [SerializeField] private LeanToggle _sfxToggle;
+        [SerializeField] private Slider _musicSlider;
+        [SerializeField] private Slider _sfxSlider;
         // [SerializeField] private LeanToggle _vibrationToggle;
         [SerializeField] private UIButton _quitButton;
 
@@ -24,11 +24,14 @@ namespace com.tinycastle.StickerBooker
             var pref = GM.Instance.Player.GetPreference();
             _cachedPref = pref;
 
-            _musicToggle.Set(pref.MusicVolume > 0);
-            _sfxToggle.Set(pref.SfxVolume > 0);
+            _musicSlider.value = (pref.MusicVolume / 50f);
+            _sfxSlider.value = (pref.SfxVolume / 50f);
+
+            _musicSlider.onValueChanged.AddListener(OnMusicSlide);
+            _sfxSlider.onValueChanged.AddListener(OnSfxSlide);
             // _vibrationToggle.Set(pref.Vibration);
 
-            _version.RawString = $"Version {Application.version}";
+            _version.RawString = $"V{Application.version}";
             
             base.InnateOnShowStart();
         }
@@ -61,16 +64,16 @@ namespace com.tinycastle.StickerBooker
             GM.Instance.Popups.GetPopup(PopupNames.CREDITS).Show();
         }
 
-        public void OnMusicToggle(bool value)
+        public void OnMusicSlide(float value)
         {
-            _cachedPref.MusicVolume = value ? 50 : 0;
-            AudioManager.MusicVolume = _cachedPref.MusicVolume > 0 ? 0.5f : 0f;
+            _cachedPref.MusicVolume = Mathf.RoundToInt(value * 50);
+            AudioManager.MusicVolume = value * 0.5f;
         }
 
-        public void OnSfxToggle(bool value)
+        public void OnSfxSlide(float value)
         {
-            _cachedPref.SfxVolume = value ? 50 : 0;
-            AudioManager.SoundVolume = _cachedPref.SfxVolume > 0 ? 0.5f : 0f;
+            _cachedPref.SfxVolume = Mathf.RoundToInt(value * 50);
+            AudioManager.SoundVolume = value * 0.5f;
         }
 
         public void OnVibrationToggle(bool value)
