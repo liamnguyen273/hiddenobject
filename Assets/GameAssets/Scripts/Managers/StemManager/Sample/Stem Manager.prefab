@@ -44,5 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b1bc9069b6ebb74981e5e3af0ab4a64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _stemData: {fileID: 11400000, guid: 239aaf23851f70e4fbff5ebc8862088b, type: 2}
+  _stemDatas:
+  - {fileID: 11400000, guid: 239aaf23851f70e4fbff5ebc8862088b, type: 2}
+  - {fileID: 11400000, guid: e418b3d269303bd49a357b272e846bdd, type: 2}
   _audioSourcePrefab: {fileID: 7352795832348337510, guid: fd9948094ad56694081d28a5e84f7eda, type: 3}

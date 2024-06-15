@@ -34,44 +34,48 @@ public class FirebaseServiceAdapter : IAnalyticsServiceAdapter
 
     public void Initialize()
     {
-        _state = InitializationState.INITIALIZING;
-        _progress = 0f;
+        _state = InitializationState.SUCCESSFUL;
+        OnInitializationSuccessfulEvent?.Invoke();
         
-        FirebaseHelper.CheckDependencies().ContinueWith(t1 =>
-        {
-            var available = t1.Result == DependencyStatus.Available;
-
-            if (available)
-            {
-                _progress = 1f;
-                _state = InitializationState.SUCCESSFUL;
-                OnInitializationSuccessfulEvent?.Invoke();
-                LogObj.Default.Info("FirebaseServiceAdapter", $"Firebase initialized.");
-            }
-            else
-            {
-                LogObj.Default.Warn("FirebaseServiceAdapter", $"Firebase dependencies were not resolved (Result: {t1.Result}). Initialization halted.");
-                _state = InitializationState.FAILED;
-                OnInitializationFailedEvent?.Invoke();
-            }
-        }, TaskScheduler.FromCurrentSynchronizationContext());
+        // TODO
+        // _state = InitializationState.INITIALIZING;
+        // _progress = 0f;
+        //
+        // FirebaseHelper.CheckDependencies().ContinueWith(t1 =>
+        // {
+        //     var available = t1.Result == DependencyStatus.Available;
+        //
+        //     if (available)
+        //     {
+        //         _progress = 1f;
+        //         _state = InitializationState.SUCCESSFUL;
+        //         OnInitializationSuccessfulEvent?.Invoke();
+        //         LogObj.Default.Info("FirebaseServiceAdapter", $"Firebase initialized.");
+        //     }
+        //     else
+        //     {
+        //         LogObj.Default.Warn("FirebaseServiceAdapter", $"Firebase dependencies were not resolved (Result: {t1.Result}). Initialization halted.");
+        //         _state = InitializationState.FAILED;
+        //         OnInitializationFailedEvent?.Invoke();
+        //     }
+        // }, TaskScheduler.FromCurrentSynchronizationContext());
     }
     
     public void SendEvent(AnalyticsEventBuilder eventBuilder)
     {
-        if (TranslateGameEventName(eventBuilder.Name, out var name))
-        {
-            var parameters = eventBuilder.Parameters
-                .Select(x => GetParam(x.name, x.type, x.value))
-                .Where(x => x != null)
-                .ToArray();
-            FirebaseAnalytics.LogEvent(name, parameters);
-            LogObj.Default.Info("FirebaseServiceAdapter", $"Logged event: {eventBuilder}");
-        }
-        else
-        {
-            LogObj.Default.Info("FirebaseServiceAdapter", $"Event not sent. Does not have event {eventBuilder.Name} translation.");
-        }
+        // if (TranslateGameEventName(eventBuilder.Name, out var name))
+        // {
+        //     var parameters = eventBuilder.Parameters
+        //         .Select(x => GetParam(x.name, x.type, x.value))
+        //         .Where(x => x != null)
+        //         .ToArray();
+        //     FirebaseAnalytics.LogEvent(name, parameters);
+        //     LogObj.Default.Info("FirebaseServiceAdapter", $"Logged event: {eventBuilder}");
+        // }
+        // else
+        // {
+        //     LogObj.Default.Info("FirebaseServiceAdapter", $"Event not sent. Does not have event {eventBuilder.Name} translation.");
+        // }
     }
 
     public bool TranslateGameEventName(string name, out string translatedName)

@@ -1,7 +1,8 @@
     public enum LibrarySounds {
         Button,
         Congrats,
-        Sticker
+        Sticker,
+        Failed
     }
     public enum LibraryMusic {
         LevelMusic,

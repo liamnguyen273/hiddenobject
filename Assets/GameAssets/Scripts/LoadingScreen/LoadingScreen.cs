@@ -38,7 +38,7 @@ namespace com.tinycastle.StickerBooker
         
         public bool Active => _progressItem != null;
 
-        private void Awake()
+        private void Start()
         {
             var rect = GetComponent<RectTransform>();
             rect.anchoredPosition = new Vector2(0f, 0f);

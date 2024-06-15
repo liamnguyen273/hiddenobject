@@ -10,7 +10,7 @@ namespace com.tinycastle.StickerBooker
 {
     public class StemManager : MonoBehaviour, IStemInstrumentPlayer
     {
-        [SerializeField] private StemData _stemData;
+        [SerializeField] private StemData[] _stemDatas;
         [SerializeField] private AudioSource _audioSourcePrefab;
 
         //Quick Pool implementation
@@ -22,11 +22,8 @@ namespace com.tinycastle.StickerBooker
         private const float DEFAULT_VOLUME = 0.6f;
         private const float FADE_TIME = 1.5f;
 
-        private void Start() //Test code
-        {
-            SetStemData(_stemData);
-            // Initialize();
-        }
+        private LevelEntry _entry;
+        private StemData _currentStemData;
 
         private void Update() //Test code
         {
@@ -40,18 +37,38 @@ namespace com.tinycastle.StickerBooker
         {
             ClearAllAudioSource();
         }
+        
+        public void SetLevel(LevelEntry entry)
+        {
+            _entry = entry;
+        }
+
+        private StemData ResolveStemData()
+        {
+            if (_entry == null) return _stemDatas[0];
+
+            foreach (var stemData in _stemDatas)
+            {
+                if (stemData.ResolvePlayForLevel(_entry))
+                {
+                    return stemData;
+                }
+            }
+
+            return _stemDatas[0];
+        }
 
         public void Initialize()
         {
-            if(_stemData == null)
-            {
-                CLog.Error("Empty Stem data");
-                return;
-            }
-
             ClearAllAudioSource();
 
-            foreach (AudioClip clip in _stemData.layers)
+            if (_currentStemData == null)
+            {
+                _currentStemData = ResolveStemData();
+                _currentLayerIndex = 0;
+            }
+            
+            foreach (AudioClip clip in _currentStemData.layers)
             {
                 AudioSource audioSource;
                 if (_audioSourcePool.Count == 0)
@@ -150,21 +167,15 @@ namespace com.tinycastle.StickerBooker
             _audioSourceUsing.Clear();
         }
 
-        public void SetStemData(StemData stemData)
-        {
-            _stemData = stemData;
-            _currentLayerIndex = 0;
-        }
-
         public void TurnOnNextLayer()
         {
-            if (_stemData == null)
+            if (_currentStemData == null)
             {
                 CLog.Error("No Stem Data set");
                 return;
             }
 
-            if (_currentLayerIndex < _stemData.LayerCount)
+            if (_currentLayerIndex < _currentStemData.LayerCount)
             {
                 _audioSourceUsing[_currentLayerIndex++].volume = DEFAULT_VOLUME;
             }

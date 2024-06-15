@@ -41,22 +41,25 @@ namespace com.tinycastle.StickerBooker.RemoteConfig
         
         protected override void StartInitializationBehaviour()
         {
-            var dependency = FirebaseHelper.CheckDependencies();
-            dependency.ContinueWith(t1 =>
-            {
-                Log.Info("Dependencies checked.");
-                var available = t1.Result == DependencyStatus.Available;
+            // TODO
+            // var dependency = FirebaseHelper.CheckDependencies();
+            // dependency.ContinueWith(t1 =>
+            // {
+            //     Log.Info("Dependencies checked.");
+            //     var available = t1.Result == DependencyStatus.Available;
+            //
+            //     if (available)
+            //     {
+            //         InitializeAsync().ContinueWith(t2 => EndInitialize(true), TaskScheduler.FromCurrentSynchronizationContext());
+            //     }
+            //     else
+            //     {
+            //         Log.Error($"Could not resolve all Firebase dependencies: {t1.Result}. Initialization halted.");
+            //         EndInitialize(false);
+            //     }
+            // }, TaskScheduler.FromCurrentSynchronizationContext());
 
-                if (available)
-                {
-                    InitializeAsync().ContinueWith(t2 => EndInitialize(true), TaskScheduler.FromCurrentSynchronizationContext());
-                }
-                else
-                {
-                    Log.Error($"Could not resolve all Firebase dependencies: {t1.Result}. Initialization halted.");
-                    EndInitialize(false);
-                }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+            EndInitialize(true);
         }
 
         protected override void EndInitializationBehaviour()
@@ -68,99 +71,99 @@ namespace com.tinycastle.StickerBooker.RemoteConfig
 
         public string GetValue(string name, string clientDefinedFailedValue)
         {
-            if (Usable)
-            {
-                try
-                {
-                    var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
-                    return configValue.StringValue;
-                }
-                catch (Exception e)
-                {
-                    Log.Warn("Getting remote config met an exception, " +
-                                        "will return client default.");
-                    Log.Warn(e);
-                }
-            }
-            else
-            {
-                Log.Warn($"Cannot get value when initialization status is ${State}");
-            }
+            // if (Usable)
+            // {
+            //     try
+            //     {
+            //         var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
+            //         return configValue.StringValue;
+            //     }
+            //     catch (Exception e)
+            //     {
+            //         Log.Warn("Getting remote config met an exception, " +
+            //                             "will return client default.");
+            //         Log.Warn(e);
+            //     }
+            // }
+            // else
+            // {
+            //     Log.Warn($"Cannot get value when initialization status is ${State}");
+            // }
     
             return clientDefinedFailedValue;
         }
         
         public long GetValue(string name, long clientDefinedFailedValue)
         {
-            if (Usable)
-            {
-                try
-                {
-                    var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
-                    return configValue.LongValue;
-                }
-                catch (Exception e)
-                {
-                    Log.Warn("Getting remote config met an exception, " +
-                                        "will return client default.");
-                    Log.Warn(e);
-                }
-                
-            }
-            else
-            {
-                Log.Warn($"Cannot get value when initialization status is ${State}");
-            }
+            // if (Usable)
+            // {
+            //     try
+            //     {
+            //         var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
+            //         return configValue.LongValue;
+            //     }
+            //     catch (Exception e)
+            //     {
+            //         Log.Warn("Getting remote config met an exception, " +
+            //                             "will return client default.");
+            //         Log.Warn(e);
+            //     }
+            //     
+            // }
+            // else
+            // {
+            //     Log.Warn($"Cannot get value when initialization status is ${State}");
+            // }
 
             return clientDefinedFailedValue;
         }      
         
         public bool GetValue(string name, bool clientDefinedFailedValue)
         {
-            if (Usable)
-            {
-                try
-                {
-                    var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
-                    return configValue.BooleanValue;
-                }
-                catch (Exception e)
-                {
-                    Log.Warn("Getting remote config met an exception, " +
-                                        "will return client default.");
-                    Log.Warn(e);
-                }
-                
-            }
-            else
-            {
-                Log.Warn($"Cannot get value when initialization status is ${State}");
-            }
+            // if (Usable)
+            // {
+            //     try
+            //     {
+            //         var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
+            //         return configValue.BooleanValue;
+            //     }
+            //     catch (Exception e)
+            //     {
+            //         Log.Warn("Getting remote config met an exception, " +
+            //                             "will return client default.");
+            //         Log.Warn(e);
+            //     }
+            //     
+            // }
+            // else
+            // {
+            //     Log.Warn($"Cannot get value when initialization status is ${State}");
+            // }
 
             return clientDefinedFailedValue;
         }   
         
         public double GetValue(string name, double clientDefinedFailedValue)
         {
-            if (Usable)
-            {
-                try
-                {
-                    var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
-                    return configValue.DoubleValue;
-                }
-                catch (Exception e)
-                {
-                    Log.Warn("Getting remote config met an exception, " +
-                                        "will return client default.");
-                    Log.Warn(e);
-                }
-                
-            }
-            else
-            {
-                Log.Warn($"Cannot get value when initialization status is ${State}");
-            }
+            // if (Usable)
+            // {
+            //     try
+            //     {
+            //         var configValue = FirebaseRemoteConfig.DefaultInstance.GetValue(name);
+            //         return configValue.DoubleValue;
+            //     }
+            //     catch (Exception e)
+            //     {
+            //         Log.Warn("Getting remote config met an exception, " +
+            //                             "will return client default.");
+            //         Log.Warn(e);
+            //     }
+            //     
+            // }
+            // else
+            // {
+            //     Log.Warn($"Cannot get value when initialization status is ${State}");
+            // }
 
             return clientDefinedFailedValue;
         }
