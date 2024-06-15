@@ -4,49 +4,13 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
-    implementation 'androidx.recyclerview:recyclerview:1.2.1' // Assets/MaxSdk/Mediation/Mintegral/Editor/Dependencies.xml:9
-    implementation 'com.android.installreferrer:installreferrer:2.1' // Assets/AppsFlyer/Editor/AppsFlyerDependencies.xml:10
-    implementation 'com.android.support:appcompat-v7:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
-    implementation 'com.android.support:cardview-v7:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
-    // implementation 'com.android.support:customtabs:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
-    implementation 'com.android.support:customtabs:28.+' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:7
-    implementation 'com.android.support:recyclerview-v7:28.+' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:6
-    implementation 'com.android.support:support-v4:25.3.1' // Facebook.Unity.Editor.AndroidSupportLibraryResolver.addSupportLibraryDependency
-    implementation 'com.applovin.mediation:adcolony-adapter:4.8.0.4' // Assets/MaxSdk/Mediation/AdColony/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:bytedance-adapter:5.5.0.6.0' // Assets/MaxSdk/Mediation/ByteDance/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:facebook-adapter:[6.16.0.1]' // Assets/MaxSdk/Mediation/Facebook/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:fyber-adapter:8.2.4.0' // Assets/MaxSdk/Mediation/Fyber/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:google-adapter:[22.4.0.1]' // Assets/MaxSdk/Mediation/Google/Editor/Dependencies.xml:5
-    implementation 'com.applovin.mediation:google-ad-manager-adapter:[22.4.0.1]' // Assets/MaxSdk/Mediation/GoogleAdManager/Editor/Dependencies.xml:5
-    implementation 'com.applovin.mediation:inmobi-adapter:10.6.0.0' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:ironsource-adapter:7.5.2.0.0' // Assets/MaxSdk/Mediation/IronSource/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:mintegral-adapter:16.5.31.0' // Assets/MaxSdk/Mediation/Mintegral/Editor/Dependencies.xml:8
-    implementation 'com.applovin.mediation:mytarget-adapter:5.19.0.0' // Assets/MaxSdk/Mediation/MyTarget/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:unityads-adapter:4.9.1.0' // Assets/MaxSdk/Mediation/UnityAds/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:vungle-adapter:6.12.1.1' // Assets/MaxSdk/Mediation/Vungle/Editor/Dependencies.xml:4
-    implementation 'com.applovin.mediation:yandex-adapter:6.1.0.0' // Assets/MaxSdk/Mediation/Yandex/Editor/Dependencies.xml:4
-    implementation 'com.applovin:applovin-sdk:12.1.0' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:4
-    implementation 'com.appsflyer:adrevenue:6.9.1' // Assets/AppsFlyer/Editor/AppsFlyerAdRevenueDependencies.xml:4
-    implementation 'com.appsflyer:af-android-sdk:6.12.2' // Assets/AppsFlyer/Editor/AppsFlyerDependencies.xml:6
-    implementation 'com.appsflyer:unity-adrevenue-generic-wrapper:6.9.1' // Assets/AppsFlyer/Editor/AppsFlyerAdRevenueDependencies.xml:5
-    implementation 'com.appsflyer:unity-wrapper:6.12.21' // Assets/AppsFlyer/Editor/AppsFlyerDependencies.xml:8
-    implementation 'com.facebook.android:facebook-applinks:[14.1, 15)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:6
-    implementation 'com.facebook.android:facebook-core:[14.1, 15)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:5
-    implementation 'com.facebook.android:facebook-gamingservices:[14.1, 15)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:9
-    implementation 'com.facebook.android:facebook-login:[14.1, 15)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:7
-    implementation 'com.facebook.android:facebook-share:[14.1, 15)' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:8
-    implementation 'com.google.android.gms:play-services-base:18.2.0' // Assets/Firebase/Editor/AppDependencies.xml:17
-    implementation 'com.google.android.ump:user-messaging-platform:2.1.0' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:5
-    implementation 'com.google.firebase:firebase-analytics:21.3.0' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:15
-    implementation 'com.google.firebase:firebase-analytics-unity:11.6.0' // Assets/Firebase/Editor/AnalyticsDependencies.xml:18
-    implementation 'com.google.firebase:firebase-app-unity:11.6.0' // Assets/Firebase/Editor/AppDependencies.xml:22
-    implementation 'com.google.firebase:firebase-common:20.3.3' // Assets/Firebase/Editor/AppDependencies.xml:13
-    implementation 'com.google.firebase:firebase-config:21.4.1' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:13
-    implementation 'com.google.firebase:firebase-config-unity:11.6.0' // Assets/Firebase/Editor/RemoteConfigDependencies.xml:20
-    implementation 'com.google.firebase:firebase-dynamic-links:21.1.0' // Assets/Firebase/Editor/DynamicLinksDependencies.xml:13
-    implementation 'com.google.firebase:firebase-dynamic-links-unity:11.6.0' // Assets/Firebase/Editor/DynamicLinksDependencies.xml:20
-    implementation 'com.parse.bolts:bolts-android:1.4.0' // Assets/FacebookSDK/Plugins/Editor/Dependencies.xml:4
-    implementation 'com.squareup.picasso:picasso:2.71828' // Assets/MaxSdk/Mediation/InMobi/Editor/Dependencies.xml:5
+    implementation 'com.google.android.gms:play-services-base:18.2.0' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:17
+    implementation 'com.google.firebase:firebase-analytics:21.3.0' // Packages/com.google.firebase.analytics/Firebase/Editor/AnalyticsDependencies.xml:13
+    implementation 'com.google.firebase:firebase-analytics-unity:11.6.0' // Packages/com.google.firebase.analytics/Firebase/Editor/AnalyticsDependencies.xml:18
+    implementation 'com.google.firebase:firebase-app-unity:11.6.0' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:22
+    implementation 'com.google.firebase:firebase-common:20.3.3' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:13
+    implementation 'com.google.firebase:firebase-config:21.4.1' // Packages/com.google.firebase.remote-config/Firebase/Editor/RemoteConfigDependencies.xml:13
+    implementation 'com.google.firebase:firebase-config-unity:11.6.0' // Packages/com.google.firebase.remote-config/Firebase/Editor/RemoteConfigDependencies.xml:20
 // Android Resolver Dependencies End
 **DEPS**}
 

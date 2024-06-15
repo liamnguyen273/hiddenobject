@@ -2,7 +2,6 @@ using System;
 using com.brg.Common;
 using com.brg.Common.Random;
 using com.brg.Common.UI;
-using com.brg.Utilities;
 using JSAM;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,8 +10,6 @@ using com.tinycastle.StickerBooker.Effects;
 using com.tinycastle.StickerBooker.RemoteConfig;
 using GameAssets.Scripts.Screens;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI.Extensions;
 
 namespace com.tinycastle.StickerBooker
 {
@@ -43,7 +40,7 @@ namespace com.tinycastle.StickerBooker
         [SerializeField] private MainMenu _mainMenu;
 
         [SerializeField] private AdManager _adManager;
-        [SerializeField] private FacebookManager _facebookManager;
+
         private PlayerManager _playerManager;
         private DataManager _dataManager;
         private PurchaseManager _purchaseManager;
@@ -73,7 +70,7 @@ namespace com.tinycastle.StickerBooker
         public MainMenu Menu => _mainMenu;
         
         public AdManager Ad => _adManager;
-        public FacebookManager Facebook => _facebookManager;
+        // public FacebookManager Facebook => _facebookManager;
         public PlayerManager Player => _playerManager;
         public DataManager Data => _dataManager;
         public PurchaseManager Purchases => _purchaseManager;
@@ -119,7 +116,7 @@ namespace com.tinycastle.StickerBooker
                 _remoteConfigManager,
                 _purchaseManager,
                 _adManager,
-                _facebookManager,
+                // _facebookManager,
                 _mainMenu,
                 _mainGameManager,
                 _mainGameHud,

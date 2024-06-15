@@ -10,6 +10,7 @@ using com.brg.Common.Logging;
 using com.brg.Common.UI;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace com.tinycastle.StickerBooker
@@ -66,6 +67,19 @@ namespace com.tinycastle.StickerBooker
         
         private GameState _state = GameState.NONE;
         private float _gameTimer = -1;
+
+        [SerializeField] private TextLocalizer _tryCountText;
+        private int _tryCount;
+
+        public int TryCount
+        {
+            get => _tryCount;
+            set
+            {
+                _tryCount = value;
+                _tryCountText.RawString = $"TRIES: {_tryCount}";
+            }
+        }
         
         public GameState GameState
         {
@@ -123,10 +137,43 @@ namespace com.tinycastle.StickerBooker
             var list = _dynamicStickers.Where(x => x.HasLink && x.LogicalInteractable && !x.Dragging).ToList();
             return list.Count == 0 ? null : list[GM.Instance.Rng.GetInteger(0, list.Count)];
         }
-        
+
+        public void OnStickerClickFailed(PointerEventData eventData)
+        {
+            if (TryCount == 0)
+            {
+                ShowPopupOutOfTries();
+                return;
+            }
+            
+            GM.Instance.Effects.MakeXMark(eventData.pressPosition);
+            TryCount = Mathf.Max(0, TryCount - 1);
+            
+            if (TryCount == 0)
+            {
+                ShowPopupOutOfTries();
+            }
+        }
+
+        private void ShowPopupOutOfTries()
+        {
+            var popup = GM.Instance.Popups.GetPopup<PopupBehaviourOutOfTries>(out var behaviour);
+            behaviour.SetOnYesCallback(() =>
+            {
+                TryCount += 5;
+            }, PerformReplayLevel);
+            popup.Show();
+        }
+
         // public void OnStickerStickToTarget(DynamicSticker dynamicSticker, bool byPlayer)
         public void OnStickerFound(StaticSticker staticSticker, bool byPlayer)
         {
+            if (TryCount == 0)
+            {
+                ShowPopupOutOfTries();
+                return;
+            }
+            
             var index = Array.FindIndex(_dynamicStickers, x => x.LinkedStaticSticker == staticSticker);
             
             if (index > -1)
@@ -293,26 +340,39 @@ namespace com.tinycastle.StickerBooker
         public void OnReplayLevel()
         {
             var popup = GM.Instance.Popups.GetPopup<PopupBehaviourAsk>(out var behaviour);
-            behaviour.SetQuestion("Replay level?", "Clear the canvas and play again from the start?", () =>
-            {
-                GM.Instance.Loading.RequestLoad(new ImmediateProgressItem(), () =>
-                {
-                    // Clear progress
-                    GM.Instance.Player.ClearLevelProgress(_currentId);
-                    
-                    // Restart map
-                    _map.Restart();
-                
-                    // Restart book-keep
-                    PopulateStickerBookkeeping(true);
-                }, StartGame);
-            }, null);
+            behaviour.SetQuestion("Replay level?", "Clear the canvas and play again from the start?", PerformReplayLevel, null);
             popup.Show();
         }
-        
+
+        private void PerformReplayLevel()
+        {
+            GM.Instance.Loading.RequestLoad(new ImmediateProgressItem(), () =>
+            {
+                // Clear progress
+                GM.Instance.Player.ClearLevelProgress(_currentId);
+                    
+                // Restart map
+                _map.Restart();
+                
+                // Restart book-keep
+                PopulateStickerBookkeeping(true);
+                
+                // Remove dynamic sticker book-keep
+                foreach (var sticker in _dynamicStickers)
+                {
+                    sticker.ResetSticker();
+                }
+                
+                FillStickerBar();
+
+            }, StartGame);
+        }
+
+        private const int TRY_COUNT = 5;
         private void StartGame()
         {
             _saveProgressMeter = 0;
+            TryCount = TRY_COUNT;
             
             TimeAttackModule.SetUse(_entry.IsTimeAttack);
             MultiplayerModule.SetUse(_entry.IsMultiplayer, _entry);
@@ -598,37 +658,17 @@ namespace com.tinycastle.StickerBooker
 
         private int GetStemIndex(int filledCount, int total)
         {
-            if (total == 10)
-            {
-                return filledCount switch
-                {
-                    1 => 1,
-                    2 => 2,
-                    4 => 3,
-                    6 => 4,
-                    8 => 5,
-                    9 => 6,
-                    10 => 7,
-                    _ => -1
-                };
-            }
-            
-            if (total == 20)
-            {
-                return filledCount switch
-                {
-                    1 => 1,
-                    4 => 2,
-                    8 => 3,
-                    12 => 4,
-                    15 => 5,
-                    17 => 6,
-                    20 => 7,
-                    _ => -1
-                };
-            }
-            
-            return -1;
+            // First one is always played
+            const int incomingStemCount = 7;
+            var step = total / (incomingStemCount + 1);
+
+            var d = filledCount / step;
+            var m = filledCount % step;
+
+            if (m != 0) return -1;
+            if (d > incomingStemCount) return -1;
+
+            return d;
         }
     }
 }

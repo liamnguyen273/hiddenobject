@@ -4,6 +4,7 @@ using System.Linq;
 using com.brg.Common.Localization;
 using com.brg.Utilities;
 using DG.Tweening;
+using JSAM;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.UI;
@@ -20,11 +21,15 @@ namespace com.tinycastle.StickerBooker.Effects
         [SerializeField] private GameObject _thingFlyerPrefab;
         [SerializeField] private GameObject _floaterPrefab;
 
+        [SerializeField] private RectTransform _xmarkHost;
+        [SerializeField] private GameObject _xmarkPrefab;
+        
         private HashSet<Tween> _flyerTweens = new();
         private Transform _stickingFollower = null;
         private Vector3 _stickingOffset;
         private Transform _hintFollower = null;
         private Vector3 _hintOffset;
+        private HashSet<Tween> _xmarkTweens = new();
 
         private void Update()
         {
@@ -48,6 +53,27 @@ namespace com.tinycastle.StickerBooker.Effects
             var go = Instantiate(_floaterPrefab, host, false);
             go.transform.localPosition = Vector3.zero;
             return go.GetComponent<Floater>();
+        }
+
+        public void MakeXMark(Vector2 screenPosition)
+        {
+            var pos = _xmarkHost.transform.position;
+            var worldPos = Camera.main.ScreenToWorldPoint(screenPosition);
+            var xmark = Instantiate(_xmarkPrefab, _xmarkHost, false);
+            xmark.transform.position = worldPos;
+            
+            // Tween
+            AudioManager.PlaySound(LibrarySounds.Failed);
+            var tween = DOTween.Sequence()
+                .Append(xmark.GetComponent<RectTransform>().DOPunchScale(new Vector3(1.1f, 1.1f, 1.1f), 1.5f, 5, 0f))
+                .Append(xmark.GetComponent<CanvasGroup>().DOFade(0f, 0.5f));
+            _xmarkTweens.Add(tween);
+            tween.OnComplete(() =>
+                {
+                    _xmarkTweens.Remove(tween);
+                    Destroy(xmark.gameObject);
+                })
+                .Play();
         }
 
         public void PlayFlyThings(

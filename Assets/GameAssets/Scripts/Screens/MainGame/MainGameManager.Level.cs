@@ -74,7 +74,7 @@ namespace com.tinycastle.StickerBooker
             
             var seed = 19823046 + _entry.SortOrder * 100 + _entry.SortOrder;
             var rng = new System.Random(seed);
-            var total = stickerList.Count > 50 ? 20 : 10;
+            var total = stickerList.Count > 50 ? 50 : 35;
                 
             for (var i = 0; i < total; ++i)
             {

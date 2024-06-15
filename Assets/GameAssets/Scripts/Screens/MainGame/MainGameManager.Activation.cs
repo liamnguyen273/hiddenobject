@@ -4,11 +4,14 @@ using JSAM;
 using System.Collections.Generic;
 using com.tinycastle.StickerBooker.RemoteConfig;
 using UnityEngine;
+using UnityEngine.UI.Extensions;
 
 namespace com.tinycastle.StickerBooker
 {
     public partial class MainGameManager : IActivatable
     {
+        [SerializeField] private ScrollSnap _itemBarScroll;
+        
         public void SetLevel(string id)
         {
             _currentId = id;
@@ -59,6 +62,8 @@ namespace com.tinycastle.StickerBooker
             }
 
             _popupPerInterCount = (int)GM.Instance.RemoteConfigs.GetValue(GameRemoteConfigs.REMOVEAD_POPUPFREQUENCY, 10);
+            
+            _itemBarScroll.ChangePage(0);
             
             _stemManager.Initialize();
             StartGame();
