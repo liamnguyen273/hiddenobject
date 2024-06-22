@@ -237,7 +237,7 @@ namespace com.tinycastle.StickerBooker
                 Effects.PlayFlyThings(from, sprites, counts, targets, actions, () =>
                 {
                     Player.RequestSaveData(true, true, false);
-                }, 160, delay: delay);
+                }, 100, delay: delay);
 
                 AudioManager.PlaySound(LibrarySounds.Sticker);
             };

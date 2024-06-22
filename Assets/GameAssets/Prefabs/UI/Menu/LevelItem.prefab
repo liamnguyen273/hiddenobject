@@ -1785,7 +1785,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -70}
-  m_SizeDelta: {x: -220, y: 60}
+  m_SizeDelta: {x: -190, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7209181692995458938
 CanvasRenderer:
@@ -2795,6 +2795,14 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
+      propertyPath: m_fontSharedMaterials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
+      propertyPath: m_fontSharedMaterials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9a8c58fa1c5c2e541a477d1445ace664, type: 2}
     - target: {fileID: 2745939827913527357, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
       propertyPath: m_Name
       value: Text
@@ -2806,8 +2814,46 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2745939827913527357, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2528716587314689175}
   m_SourcePrefab: {fileID: 100100000, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
+--- !u!1 &2169340783622590615 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2745939827913527357, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
+  m_PrefabInstance: {fileID: 4035368526468710570}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2528716587314689175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2169340783622590615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52c162dc854d2f24fa639ba0623de5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 4.86
+  spread: 0
+  useGlobalAngle: 0
+  offsetAngle: 90
+  offsetDistance: 10.96
+  offset: {x: 0.00000065326697, y: -10.96}
+  color: {r: 0, g: 0, b: 0, a: 0.4392157}
+  inset: 0
+  blendMode: 0
+  useCasterAlpha: 1
+  ignoreCasterColor: 0
+  colorBleedMode: 2
+  disableFitCompensation: 0
+  shadowAsSibling: 0
+  cutout: 0
+  baked: 0
+  modifiedFromInspector: 0
+  bakedShadows: []
 --- !u!224 &3580877862441564502 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 698435327782959612, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
@@ -2911,7 +2957,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
       propertyPath: m_fontSize
-      value: 38
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
       propertyPath: m_fontStyle

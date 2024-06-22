@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using com.brg.Common.UI;
 using DG.Tweening;
 using UnityEngine;
@@ -63,10 +61,10 @@ namespace com.tinycastle.StickerBooker
                 
                 var rect = GetComponent<RectTransform>();
                 _updateTween = DOTween.Sequence()
-                    .Append(rect.DOAnchorPosY(_originalPos.y - 180, 0.35f)
+                    .Append(rect.DOAnchorPosX(_originalPos.x, 0.35f)
                         .SetEase(Ease.OutBack))
                     .AppendInterval(2f)
-                    .Append(rect.DOAnchorPosY(_originalPos.y, 0.35f))
+                    .Append(rect.DOAnchorPosY(-_originalPos.x, 0.35f))
                     .OnComplete(() => _updateTween = null)
                     .Play();
             }
@@ -90,7 +88,7 @@ namespace com.tinycastle.StickerBooker
                 // Move down
                 if (_animateOnUpdate)
                 {                
-                    _updateTween = rect.DOAnchorPosY(_originalPos.y - 180, 0.75f)
+                    _updateTween = rect.DOAnchorPosX(_originalPos.x, 0.75f)
                     .OnComplete(() => _updateTween = null)
                     .Play();
                 }
@@ -116,7 +114,7 @@ namespace com.tinycastle.StickerBooker
                 // Move up
                 if (_animateOnUpdate)
                 {                
-                    _updateTween = rect.DOAnchorPosY(_originalPos.y, 0.75f)
+                    _updateTween = rect.DOAnchorPosX(-_originalPos.x, 0.75f)
                         .OnComplete(() => _updateTween = null)
                         .Play();
                 }
@@ -133,10 +131,10 @@ namespace com.tinycastle.StickerBooker
         private void ResolveReceive()
         {
             var progress = GM.Instance.Player.GetResource(GlobalConstants.CHEST_PROGRESS_RESOURCE);
-            if (progress >= 60)
+            if (progress >= 30)
             {
                 var rewards = RollRewards();
-                GM.Instance.Player.UseResource(GlobalConstants.CHEST_PROGRESS_RESOURCE, 60);
+                GM.Instance.Player.UseResource(GlobalConstants.CHEST_PROGRESS_RESOURCE, 30);
 
                 var from = Camera.main.WorldToScreenPoint(transform.position);
                 

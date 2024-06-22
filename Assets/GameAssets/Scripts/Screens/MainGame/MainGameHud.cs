@@ -90,7 +90,12 @@ namespace com.tinycastle.StickerBooker
             }
             else
             {
-                _mainGame.RequestGoHome();
+                var popup = GM.Instance.Popups.GetPopup<PopupBehaviourAsk>(out var behaviour);
+                behaviour.SetQuestion("Quit level?", "Your progress will be lost!", () =>
+                {
+                    _mainGame.RequestGoHome();
+                }, null);
+                popup.Show();
             }
         }
 

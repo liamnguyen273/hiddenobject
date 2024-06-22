@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 51}
-  m_SizeDelta: {x: 349, y: 332}
+  m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3652783778421323184
 CanvasRenderer:
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1029890688, guid: 676172e752bb20e4f8f7ed2048c78ea1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5441b585e56bb084a9082854fc080519, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -691,7 +691,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3640696944380314763, guid: 94c34ff0c114cc448a1679ae24ea84c1, type: 3}
       propertyPath: m_Name
-      value: PopupOutOfTries
+      value: PopupOutOfTime
       objectReference: {fileID: 0}
     - target: {fileID: 3837230198762440077, guid: 94c34ff0c114cc448a1679ae24ea84c1, type: 3}
       propertyPath: m_Enabled
@@ -699,7 +699,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4224072653328463302, guid: 94c34ff0c114cc448a1679ae24ea84c1, type: 3}
       propertyPath: _explicitName
-      value: popup_out_of_tries
+      value: popup_out_of_time
       objectReference: {fileID: 0}
     - target: {fileID: 4521111486246870425, guid: 94c34ff0c114cc448a1679ae24ea84c1, type: 3}
       propertyPath: m_Pivot.x
@@ -948,7 +948,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3640696944380314763, guid: 94c34ff0c114cc448a1679ae24ea84c1, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6520871482590122870}
+      addedObject: {fileID: 5205144203604724484}
   m_SourcePrefab: {fileID: 100100000, guid: 94c34ff0c114cc448a1679ae24ea84c1, type: 3}
 --- !u!114 &322093679310203153 stripped
 MonoBehaviour:
@@ -966,7 +966,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3640696944380314763, guid: 94c34ff0c114cc448a1679ae24ea84c1, type: 3}
   m_PrefabInstance: {fileID: 4532492371068935383}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6520871482590122870
+--- !u!114 &5205144203604724484
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -975,7 +975,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 891993483736832092}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef733bea11a4aaf973a8e159d917118, type: 3}
+  m_Script: {fileID: 11500000, guid: a7f9c7a23e1548e6ab96939248feb1e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _showStartEvent:
@@ -1337,9 +1337,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2692636421012277249, guid: 5824ac64fc07a3c41818f179d6e64341, type: 3}
       propertyPath: m_text
-      value: 'You ran out of tries!
+      value: 'You ran out of time
 
-        Watch an ad to get 3 more?'
+        Watch an ad to get 30 more seconds?'
       objectReference: {fileID: 0}
     - target: {fileID: 2692636421012277249, guid: 5824ac64fc07a3c41818f179d6e64341, type: 3}
       propertyPath: m_fontColor.b

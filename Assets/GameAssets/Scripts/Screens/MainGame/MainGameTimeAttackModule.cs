@@ -11,8 +11,6 @@ namespace com.tinycastle.StickerBooker
 {
     public class MainGameTimeAttackModule : MonoBehaviour
     {
-        public const float LEVEL_TIME = 60;
-
         public MainGameManager Manager { get; set; }
 
         [SerializeField] private GameObject _readyGroup;
@@ -53,7 +51,7 @@ namespace com.tinycastle.StickerBooker
             }
         }
 
-        public void PlayCountdownStart()
+        public void PlayCountdownStart(float time)
         {
             if (!_inUse) return;
             
@@ -110,7 +108,7 @@ namespace com.tinycastle.StickerBooker
                 _active = true;
             });
 
-            _timer = LEVEL_TIME;
+            _timer = time;
             _startCountdownSequence = sequence.Play();
         }
 

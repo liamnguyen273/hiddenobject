@@ -92,22 +92,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 12f04092db7c6fa48b3db23458c832f9, type: 2}
-    - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
-      propertyPath: m_fontStyle
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 8533887020177747268, guid: 12f04092db7c6fa48b3db23458c832f9, type: 2}
-    - target: {fileID: 1749486106708063613, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2745939827913527357, guid: 665391993bf06c54d9bb6ca50624d6cc, type: 3}
       propertyPath: m_Name
       value: UITextTitle

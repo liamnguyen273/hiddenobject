@@ -1572,7 +1572,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6948892527082196220, guid: f448ca2bc7aa8ab4a8eb7c3b77151d06, type: 3}
       propertyPath: m_text
-      value: CANCLE
+      value: CANCEL
       objectReference: {fileID: 0}
     - target: {fileID: 6948892527082196220, guid: f448ca2bc7aa8ab4a8eb7c3b77151d06, type: 3}
       propertyPath: m_fontSize

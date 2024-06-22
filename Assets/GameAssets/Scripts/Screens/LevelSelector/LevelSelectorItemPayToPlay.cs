@@ -34,7 +34,7 @@ namespace com.tinycastle.StickerBooker
             else
             {
                 var floater = GM.Instance.Effects.MakeFloater(transform);
-                floater.Set("Not enough\nstamps!", 200f);
+                floater.Set("Not enough\nkeys!", 200f);
             }
         }
     }

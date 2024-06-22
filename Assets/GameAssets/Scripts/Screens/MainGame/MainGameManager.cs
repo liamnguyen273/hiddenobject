@@ -6,9 +6,7 @@ using JSAM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using com.brg.Common.Logging;
 using com.brg.Common.UI;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -30,6 +28,9 @@ namespace com.tinycastle.StickerBooker
     
     public partial class MainGameManager : MonoManagerBase
     {
+        private const float TIME_ATTACK_TIME = 60;
+        private const float TIME_ATTACK_TIME_BONUS = 30;
+        
         [Header("Level components")] 
         [SerializeField] private RectTransform _overallRect;
         [SerializeField] private RectTransform _levelRect;
@@ -52,6 +53,7 @@ namespace com.tinycastle.StickerBooker
 
         [Header("Others")] 
         [SerializeField] private StemManager _stemManager;
+        [SerializeField] private Slider _stemProgress;
         
         // Level book-keepers
         private string _currentId = null;
@@ -147,7 +149,10 @@ namespace com.tinycastle.StickerBooker
             }
             
             GM.Instance.Effects.MakeXMark(eventData.pressPosition);
-            TryCount = Mathf.Max(0, TryCount - 1);
+            if (!TimeAttackModule.InUse && !MultiplayerModule.InUse)
+            {
+                TryCount = Mathf.Max(0, TryCount - 1);
+            }
             
             if (TryCount == 0)
             {
@@ -160,8 +165,22 @@ namespace com.tinycastle.StickerBooker
             var popup = GM.Instance.Popups.GetPopup<PopupBehaviourOutOfTries>(out var behaviour);
             behaviour.SetOnYesCallback(() =>
             {
-                TryCount += 5;
+                TryCount += TRY_COUNT;
             }, PerformReplayLevel);
+            popup.Show();
+        }
+        
+        private void ShowPopupOutOfTime()
+        {
+            var popup = GM.Instance.Popups.GetPopup<PopupBehaviourOutOfTime>(out var behaviour);
+            behaviour.SetOnYesCallback(() =>
+            {
+                TimeAttackModule.PlayCountdownStart(TIME_ATTACK_TIME_BONUS);
+            }, PerformReplayLevel);
+            behaviour.SetOnNoCallback(() =>
+            {
+                EndGame(false);
+            });
             popup.Show();
         }
 
@@ -208,7 +227,7 @@ namespace com.tinycastle.StickerBooker
                 }
                 
                 // Play sound
-                var stemIndex = GetStemIndex(_foundStickers.Count, _allFindStickers.Count);
+                var stemIndex = UpdateStemIndex(_foundStickers.Count, _allFindStickers.Count);
                 CLog.Log($"Stem index: {stemIndex}");
                 if (stemIndex >= 0)
                 {
@@ -242,20 +261,6 @@ namespace com.tinycastle.StickerBooker
             }
         }
         
-        public void OnHomeButton()
-        {
-            if (IsPlayingMultiplayer)
-            {
-                var popup = GM.Instance.Popups.GetPopup<PopupBehaviourAsk>(out var behaviour);
-                behaviour.SetQuestion("Quit level?", "You will lose out on the level rewards!", RequestGoHome, null);
-                popup.Show();
-            }
-            else
-            {
-                RequestGoHome();
-            }
-        }
-        
         public void RequestGoHome()
         {
             if (Completing)
@@ -280,7 +285,7 @@ namespace com.tinycastle.StickerBooker
                 .SendEvent();
             
             // Save progress
-            SaveProgress(true);
+            // SaveProgress(true);
             
             GM.Instance.RequestGoToMenu();
         }
@@ -303,7 +308,7 @@ namespace com.tinycastle.StickerBooker
             }
             else
             {
-                EndGame(false);
+                ShowPopupOutOfTime();
             }
         }
         
@@ -368,7 +373,7 @@ namespace com.tinycastle.StickerBooker
             }, StartGame);
         }
 
-        private const int TRY_COUNT = 5;
+        private const int TRY_COUNT = 3;
         private void StartGame()
         {
             _saveProgressMeter = 0;
@@ -376,6 +381,15 @@ namespace com.tinycastle.StickerBooker
             
             TimeAttackModule.SetUse(_entry.IsTimeAttack);
             MultiplayerModule.SetUse(_entry.IsMultiplayer, _entry);
+            
+            if (!TimeAttackModule.InUse && !MultiplayerModule.InUse)
+            {
+                _tryCountText.SetGOActive(true);
+            }
+            else
+            {
+                _tryCountText.SetGOActive(false);
+            }
             
             if (_entry.IsMultiplayer)
             {
@@ -387,6 +401,7 @@ namespace com.tinycastle.StickerBooker
             {
                 // In game
                 _stemManager.Play(true, 0);
+                UpdateStemIndex(0, _allFindStickers.Count);
                 EnterPlayMode();
                 _replayButton.SetActive(false);
             }
@@ -431,14 +446,14 @@ namespace com.tinycastle.StickerBooker
                         {
                             GameState = GameState.IN_GAME;
                             GM.Instance.Player.SetTutorialTimeAttackPlayed();
-                            TimeAttackModule.PlayCountdownStart();
+                            TimeAttackModule.PlayCountdownStart(TIME_ATTACK_TIME);
                         });
                         popup.Show();
                     }
                     else
                     {
                         GameState = GameState.IN_GAME;
-                        TimeAttackModule.PlayCountdownStart();
+                        TimeAttackModule.PlayCountdownStart(TIME_ATTACK_TIME);
                     }
                 }
                 else if (_entry.IsMultiplayer)
@@ -656,15 +671,20 @@ namespace com.tinycastle.StickerBooker
             popup.Show();
         }
 
-        private int GetStemIndex(int filledCount, int total)
+        private int UpdateStemIndex(int filledCount, int total)
         {
             // First one is always played
             const int incomingStemCount = 7;
             var step = total / (incomingStemCount + 1);
-
+            
             var d = filledCount / step;
             var m = filledCount % step;
 
+            var low = d * step;
+            var high = Mathf.Min((d + 1) * step, total);
+            _stemProgress.value = Mathf.InverseLerp(low, high, filledCount);
+            _stemProgress.SetGOActive(d <= incomingStemCount);
+            
             if (m != 0) return -1;
             if (d > incomingStemCount) return -1;
 

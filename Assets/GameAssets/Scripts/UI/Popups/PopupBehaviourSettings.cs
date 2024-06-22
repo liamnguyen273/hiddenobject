@@ -53,12 +53,6 @@ namespace com.tinycastle.StickerBooker
             _quitButton.SetGOActive(true);
         }
 
-        public void OnQuitButton()
-        {
-            Popup.Hide();
-            GM.Instance.MainGame.OnHomeButton();
-        }
-
         public void OnCreditsButton()
         {
             GM.Instance.Popups.GetPopup(PopupNames.CREDITS).Show();
