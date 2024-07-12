@@ -1,9 +1,6 @@
 using com.brg.Common;
-using com.brg.Common.Localization;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace com.tinycastle.StickerBooker
 {

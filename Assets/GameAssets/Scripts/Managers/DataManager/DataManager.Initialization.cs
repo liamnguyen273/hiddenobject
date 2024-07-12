@@ -20,8 +20,10 @@ namespace com.tinycastle.StickerBooker
         public const string FULL_IMAGE_KEY = "full_images";
         public const string THUMBNAIL_IMAGE_KEY = "thumbnails";
         public const string STICKERS_KEY = "stickers";
-        public const string CSV_KEY = "csvs";
-        public const string CSV_NUMBERING_KEY = "numbering_csvs";
+        public const string LEVEL_CSV_KEY = "csvs";
+        public const string LEVEL_CSV_NUMBERING_KEY = "numbering_csvs";
+
+        public const string STEM_CSV_KEY = "stem_definitions.csv";
         
         private float _progress = 0f;
         
@@ -55,10 +57,12 @@ namespace com.tinycastle.StickerBooker
                 // Resource icons
                 var iconHandle = Addressables.LoadAssetsAsync<Sprite>(ICON_LABEL, sprite => { });
                 var avatarHandle = Addressables.LoadAssetsAsync<Sprite>(AVATAR_LABEL, sprite => { });
+                // Stem
+                var stemDefHandle = Addressables.LoadAssetAsync<TextAsset>(STEM_CSV_KEY);
                 
                 Log.Info("Create handles for game assets.");
                 
-                await Task.WhenAll(productHandle.Task, levelEntryHandle.Task, iconHandle.Task, avatarHandle.Task);
+                await Task.WhenAll(productHandle.Task, levelEntryHandle.Task, iconHandle.Task, avatarHandle.Task, stemDefHandle.Task);
                 
                 Log.Info("All handles tasks completed.");
             
@@ -66,8 +70,8 @@ namespace com.tinycastle.StickerBooker
                 Log.Info("a2:", productHandle.Result);
                 Log.Info("a2-1:", productHandle.Status);
                 Log.Info("a3:", productHandle.Result?.text ?? "NO_TEXT");
+                
                 var prodText = productHandle.Result.text;
-
                 var levelEntryText = levelEntryHandle.Result.text;
                 Log.Info("b:", levelEntryText);
                 
@@ -89,6 +93,8 @@ namespace com.tinycastle.StickerBooker
 
                 _resourceIcons = iconHandle.Result.ToDictionary(x => x.name, x => x);
                 _avatars = avatarHandle.Result.ToDictionary(x => x.name, x => x);
+                var list = string.Join(", ", avatarHandle.Result.Select(x => x.name));
+                Log.Info($"Read list of avatar: {list}");
                 _leaderboardNames = _avatars.Select(x => x.Key).Where(x => x != "You").ToList();
                 
                 Log.Info("Created important fields.");
@@ -97,12 +103,17 @@ namespace com.tinycastle.StickerBooker
                 var task = Task.Run(() => MakeSortedLevels(in _levelEntries));
                 
                 Log.Info("Ordered levels.");
+
+                var stemDefText = stemDefHandle.Result.text;
+                CsvUtilities.ProcessStemDefinitionCsv(stemDefText, out var dict);
+                _stemDefs = dict;
                 
                 // Release handles, since deserialized
                 Addressables.Release(productHandle);
                 Addressables.Release(levelEntryHandle);
                 Addressables.Release(iconHandle);
-                Addressables.Release(avatarHandle);
+                Addressables.Release(stemDefHandle);
+                // Addressables.Release(avatarHandle);
                 
                 Log.Info("Release handles.");
                 
@@ -163,8 +174,8 @@ namespace com.tinycastle.StickerBooker
 
         private async Task<(bool success, LevelCsv levelCsv)> TryLoadLevelCsvs(string levelName)
         {                
-            var posKey = CSV_KEY + "/" + levelName + ".csv";
-            var numKey = CSV_NUMBERING_KEY + "/" + levelName + ".csv";
+            var posKey = LEVEL_CSV_KEY + "/" + levelName + ".csv";
+            var numKey = LEVEL_CSV_NUMBERING_KEY + "/" + levelName + ".csv";
 
             var result = new LevelCsv()
             {

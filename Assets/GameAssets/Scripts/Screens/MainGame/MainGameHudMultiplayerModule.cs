@@ -44,7 +44,10 @@ namespace com.tinycastle.StickerBooker
 
         public void SetHud(float time)
         {
-            _timeText.RawString = $"{time:00}";
+            var stime = Mathf.CeilToInt(time);
+            var m = stime / 60;
+            var s = stime % 60;
+            _timeText.RawString = m > 0 ? $"{m}:{s:00}" : $"{s:00}";
 
             if (time <= 3) Shake();
             else StopShake();

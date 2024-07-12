@@ -74,7 +74,7 @@ namespace com.tinycastle.StickerBooker
                     _mainGameManager.PrepareActivate();
                     _mainGameHud.PrepareActivate();
                     return new[]
-                        { _mainGameManager.GetPrepareActivateProgressItem(), _mainGameHud.GetPrepareActivateProgressItem() };
+                        { _mainGameManager.GetPrepareActivateProgressItem() };
                 case GameScreen.MENU:
                     _mainMenu.PrepareActivate();
                     return new[] { _mainMenu.GetPrepareActivateProgressItem() };

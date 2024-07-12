@@ -7,12 +7,20 @@ namespace com.tinycastle.StickerBooker
 {
     public class PopupBehaviourOutOfTries : UIPopupBehaviour
     {
+        [SerializeField] private TextLocalizer _title;
+        [SerializeField] private TextLocalizer _content;
         [SerializeField] private UIButton _yesButton;
         [SerializeField] private UIButton _noButton;
         [SerializeField] private UIButton _retryButton;
 
         private Action _onYes;
         private Action _retryAction;
+        
+        public void SetContent(string title, string content)
+        {
+            _title.RawString = title;
+            _content.RawString = content;
+        }
         
         public void SetOnYesCallback(Action onYes, Action retry)
         {
@@ -51,24 +59,25 @@ namespace com.tinycastle.StickerBooker
         public void OnNoButton()
         {
             Popup.Hide();
+            GM.Instance.MainGame.RequestGoHome();
         }
 
         public void OnRetryButton()
         {
             var popup = GM.Instance.Popups.GetPopup<PopupBehaviourAsk>(out var behaviour);
-            behaviour.SetQuestion("Retry level", "Are you sure want to retry the level?", OnYes, OnNo);
+            behaviour.SetQuestion("Retry level", "Are you sure want to retry the level?", OnRetryYes, OnRetryNo);
             popup.Show();
         }
 
-        private void OnYes()
+        private void OnRetryYes()
         {
             _retryAction?.Invoke();
             Popup.Hide();
         }
         
-        private void OnNo()
+        private void OnRetryNo()
         {
-            // Do nothing
+            
         }
     }
 }

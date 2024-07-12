@@ -351,6 +351,7 @@ namespace com.tinycastle.StickerBooker
         }
 
         private DynamicSticker _currentSticker;
+        private StaticSticker _currentStaticSticker;
         private float _findDelayTimer;
         private float _delayTimer;
         private bool _shouldStartMove;
@@ -370,9 +371,11 @@ namespace com.tinycastle.StickerBooker
             if (_currentSticker != null || _findDelayTimer > 0f) return;
             
             var sticker = Manager.GetRandomValidPickupableDynamicSticker();
-            if (sticker == null) return;
+            if (sticker == null || sticker.GetLinkedStaticSticker() == null) return;
 
             _currentSticker = sticker;
+            _currentStaticSticker = sticker.GetLinkedStaticSticker();
+            
             _shouldStartMove = false;
 
             var pos = _currentSticker.transform.position;
@@ -391,7 +394,7 @@ namespace com.tinycastle.StickerBooker
 
             LogObj.Default.Info("Multi", "Start move towards goal");
 
-            var target = _currentSticker.GetLinkedStaticSticker().transform.localPosition;
+            var target = _currentStaticSticker.transform.localPosition;
             target.z = _cursor.localPosition.z;
             
             var distance = Vector2.Distance(transform.localPosition, Vector3.zero);
@@ -411,17 +414,17 @@ namespace com.tinycastle.StickerBooker
                 };
             }
 
-            var dragging = _currentSticker.SimulateBeginDrag(false);
+            // var dragging = _currentSticker.SimulateBeginDrag(false);
 
-            if (dragging)
+            if (true)
             {
                 _moverTween = _cursor.DOLocalMove(target, GetMoveTime())
                     .SetEase(GetEase())
                     .OnUpdate(() =>
                     {
-                        var pos = _cursor.transform.position;
-                        pos.z = _currentSticker.transform.position.z;
-                        _currentSticker.transform.position = pos;
+                        // var pos = _cursor.transform.position;
+                        // pos.z = _currentSticker.transform.position.z;
+                        // _currentSticker.transform.position = pos;
                         SyncCursorMimic();
                     })
                     .OnComplete(() =>
@@ -448,14 +451,21 @@ namespace com.tinycastle.StickerBooker
 
             _moverTween?.Kill();
             _moverTween = null;
+
+            if (_currentSticker.GetLinkedStaticSticker() != _currentStaticSticker) return;
             
-            _currentSticker.SimulateEndDrag(false, true);
+            _currentStaticSticker.OnPointerClick();
             
             _currentSticker = null;
+            _currentStaticSticker = null;
             _shouldStartMove = false;
             
             _delayTimer = GetDelayTime();
             _findDelayTimer = 0.1f;
+
+            
+            // Give score
+            
             
             HideCursor();
         }
@@ -514,6 +524,7 @@ namespace com.tinycastle.StickerBooker
             _moverTween = null;
 
             _currentSticker = null;
+            _currentStaticSticker = null;
             _findDelayTimer = -1f;
             _delayTimer = -1f;
             _shouldStartMove = false;

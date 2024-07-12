@@ -201,12 +201,12 @@ namespace com.tinycastle.StickerBooker
 
         private static string GetNumberingCsvPath(string levelName)
         {
-            return $"{DATA_PATH_FULL}/{DataManager.CSV_NUMBERING_KEY}/{levelName}.csv";
+            return $"{DATA_PATH_FULL}/{DataManager.LEVEL_CSV_NUMBERING_KEY}/{levelName}.csv";
         }
 
         private static string GetWriteNumberingCsvPath(string levelName)
         {
-            return Application.dataPath + $"{DATA_PATH_LEAN}/{DataManager.CSV_NUMBERING_KEY}/{levelName}.csv";
+            return Application.dataPath + $"{DATA_PATH_LEAN}/{DataManager.LEVEL_CSV_NUMBERING_KEY}/{levelName}.csv";
         }
 
         private static string GetFullSpritePath(string levelName)
@@ -216,7 +216,7 @@ namespace com.tinycastle.StickerBooker
 
         private static string GetMainCsvPath(string levelName)
         {
-            return $"{DATA_PATH_FULL}/{DataManager.CSV_KEY}/{levelName}.csv";
+            return $"{DATA_PATH_FULL}/{DataManager.LEVEL_CSV_KEY}/{levelName}.csv";
         }
 
         private PreviewSticker MakePreviewSticker()

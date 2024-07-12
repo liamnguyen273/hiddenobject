@@ -1,1 +1,4 @@
--keep class com.facebook.** { *; }
+-keep class com.appsflyer.** { *; }
+-keep class kotlin.jvm.internal.Intrinsics{ *; }
+-keep class kotlin.collections.**{ *; }
+

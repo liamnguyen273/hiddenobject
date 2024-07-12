@@ -18,7 +18,7 @@ namespace com.tinycastle.StickerBooker
         [JsonIgnore] public bool Playable { get; internal set; }
         [JsonIgnore] public bool EvaluatedPlayable => Playable || IsMultiplayer;
         [JsonIgnore] public int TotalStickerCount { get; internal set; }
-        [JsonIgnore] public bool IsTimeAttack => Bundle == GlobalConstants.TIME_ATTACK_LEVEL_BUNDLE;
+        [JsonIgnore] public bool IsTimeAttack => Bundle == GlobalConstants.TIME_ATTACK_LEVEL_BUNDLE || (Bundle == GlobalConstants.NORMAL_LEVEL_BUNDLE && (SortOrder % 5 == 0 || SortOrder % 6 == 0));
         [JsonIgnore] public bool IsMultiplayer => Bundle == GlobalConstants.MULTIPLAYER_LEVEL_BUNDLE;
 
         public string GetShowUnlockCondition()

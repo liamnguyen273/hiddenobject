@@ -1,6 +1,7 @@
 using com.brg.Common;
 using com.brg.Common.Localization;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,8 @@ namespace com.tinycastle.StickerBooker
         {
             // TODO: Bundle switch
             var list = GM.Instance.Data.GetSortedLevelEntries(_bundleName ?? GlobalConstants.NORMAL_LEVEL_BUNDLE);
+
+            list ??= new List<LevelEntry>();
             
             // Filter
             list = list.Where(x => x.ShowIngame)

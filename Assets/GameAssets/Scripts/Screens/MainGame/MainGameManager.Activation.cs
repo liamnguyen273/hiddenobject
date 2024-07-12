@@ -21,7 +21,6 @@ namespace com.tinycastle.StickerBooker
         public void Activate()
         {
             _appearance.SetGOActive(true);
-            _stemManager.MuteAll();
             
             FetchTimings();
             ResetAdCounter();
@@ -65,13 +64,14 @@ namespace com.tinycastle.StickerBooker
             
             _itemBarScroll.ChangePage(0);
             
-            _stemManager.Initialize();
+            _stemManager.Activate();
+            _stemManager.MuteAll();
             StartGame();
         }
 
         public void Deactivate()
         {
-            _stemManager.Deinitialize();
+            _stemManager.Deactivate();
             _appearance.SetGOActive(false);
             GM.Instance.Player.OnOwnEvent -= OnOwn;
             GM.Instance.HasBlockingElementsEvent -= OnHasBlockingElements;
@@ -95,7 +95,12 @@ namespace com.tinycastle.StickerBooker
             {
                 success = GameState >= GameState.LOAD_DONE;
                 return GameState >= GameState.LOAD_DONE;
-            }, null, null, 10);
+            }, () =>
+            {
+                var level = _hasAssetLoad ? 0f : 0.5f;
+                var stem = (_stemManager.DownloadProgress) * 0.5f;
+                return level + stem;
+            }, null, 10);
             
             list.Add(progress1);
             list.Add(_assetHandle.MakeProgressItem(true, true, true));
@@ -107,8 +112,9 @@ namespace com.tinycastle.StickerBooker
             Log.Info("Prepare activation...");
             GameState = GameState.LOADING;
             PerformLevelLoad();
+            PerformLoadStem();
         }
-        
+
         public IProgressItem GetPrepareDeactivateProgressItem()
         {
             // TODO
@@ -193,14 +199,22 @@ namespace com.tinycastle.StickerBooker
 
         private void OnHasBanner()
         {
-            _overallRect.offsetMin = new Vector2(_overallRect.offsetMin.x, 200);
-            _overallRect.offsetMax = new Vector2(_overallRect.offsetMax.x, 0);
+            foreach (var rect in _overallRects)
+            {
+                rect.offsetMin = new Vector2(rect.offsetMin.x, 180);
+                rect.offsetMax = new Vector2(rect.offsetMax.x, 0);
+            }
+            _bannerRect.SetGOActive(true);
         }
 
         private void OnNoBanner()
         {
-            _overallRect.offsetMin = new Vector2(_overallRect.offsetMin.x, 0);
-            _overallRect.offsetMax = new Vector2(_overallRect.offsetMax.x, 0);
+            foreach (var rect in _overallRects)
+            {
+                rect.offsetMin = new Vector2(rect.offsetMin.x, 0);
+                rect.offsetMax = new Vector2(rect.offsetMax.x, 0);
+            }
+            _bannerRect.SetGOActive(false);
         }
         
         

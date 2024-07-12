@@ -38,7 +38,7 @@ namespace com.tinycastle.StickerBooker
         
         public void OnMaxDebugger()
         {
-            // MaxSdk.ShowMediationDebugger();
+            MaxSdk.ShowMediationDebugger();
         }
 
         public static void ResourceSplit(string resource, int count, out string[] itemArray, out int[] countArray)

@@ -16,10 +16,10 @@ namespace com.tinycastle.StickerBooker
         [SerializeField] private Image _avatar;
         [SerializeField] private GameObject[] _stars;
         
-        public void SetInfo(int rank, string name, int score, bool isPlayer)
+        public void SetInfo(int rank, string charName, int score, bool isPlayer)
         {
             _rankText.RawString = rank.ToString();
-            _nameText.RawString = name;
+            _nameText.RawString = charName;
             _scoreText.RawString = score.ToString();
             
             foreach (var item in _normalItems)
@@ -32,8 +32,10 @@ namespace com.tinycastle.StickerBooker
                 item.SetActive(isPlayer);
             }
 
-            _avatar.sprite = GM.Instance.Data.GetAvatar(name);
-
+            Debug.Log($"Char name: \"{charName}\"");
+            var avatar = GM.Instance.Data.GetAvatar(charName);
+            _avatar.sprite = avatar;
+            Debug.Log($"Avatar name: \"{avatar}\"");
             for (int i = 1; i <= 3; ++i)
             {
                 _stars[i - 1].SetActive(i == rank);

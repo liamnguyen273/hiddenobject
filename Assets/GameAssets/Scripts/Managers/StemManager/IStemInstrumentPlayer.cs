@@ -6,7 +6,7 @@ namespace com.tinycastle.StickerBooker
 {
     public interface IStemInstrumentPlayer
     {
-        public void Initialize();
+        public void Activate();
         
         public void Play(bool immediately, params int[] instrumentIndexes);
         
@@ -20,6 +20,6 @@ namespace com.tinycastle.StickerBooker
 
         public void Resume();
 
-        public void Deinitialize();
+        public void Deactivate();
     }
 }

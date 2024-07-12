@@ -55,11 +55,11 @@ namespace com.tinycastle.StickerBooker
         private const string REWARD_AD_UNIT = "d1033909fdcfebae";
         private const string INTERSTITIAL_AD_UNIT = "2f7121f432ab8747";
         private const string BANNER_AD_UNIT = "e380e1c3c5d0c1f2";
-#else // UNITY_ANDROID
-        private const string SDK_KEY = "zq2X1FfdfeIMOsmepidyMNbeqvHKzJyNwy6EI2lT_14Ns_yAy-XVUTSsThDAZ5-AqDJ2OU0CLSeP7euEiV4wor";
-        private const string REWARD_AD_UNIT = "13f028b62a0fd610";
-        private const string INTERSTITIAL_AD_UNIT = "2345d944696ed80f";
-        private const string BANNER_AD_UNIT = "1ccfad2bca8a1368";
+#elif UNITY_ANDROID
+        private const string SDK_KEY = "VG8UsnJLt1rXH1FMWShaVrSsxV8Gxw8RBGw12EMwFBRXDgul7aJdQnULHcbCXkdi_Tl1n5y1HNZU2SDA1XpRIH";
+        private const string REWARD_AD_UNIT = "3720273d445651e6";
+        private const string INTERSTITIAL_AD_UNIT = "726804f1d8ec9758";
+        private const string BANNER_AD_UNIT = "fcf066d498933aeb";
 #endif
 
         public const string TYPE_INTERSTITIAL = "inter";
@@ -102,10 +102,9 @@ namespace com.tinycastle.StickerBooker
             {
                 ShowAd();
             }
-            // TEMP
             else if (_waitTimer <= 0f)
             {
-                OnAdCompleted(true);
+                OnAdWaitTimeout();
             }
         }
 
@@ -135,7 +134,7 @@ namespace com.tinycastle.StickerBooker
             {
                 Log.Info("User has Ad Free, ad will be completed immediately");
                 SetAdRequestAsSuccessful();
-                return;
+                ConcludeAdRequest();
             }
             else
             {
@@ -153,16 +152,7 @@ namespace com.tinycastle.StickerBooker
                 .OnComplete(() =>
                 {
                     _fadeTween = null;
-    
-                    if (_request.Type == TYPE_INTERSTITIAL)
-                    {
-                        // Add extra wait for fun
-                        DOVirtual.DelayedCall(1f, StartAdWaitTimer);
-                    }
-                    else
-                    {
-                        StartAdWaitTimer();
-                    }
+                    StartAdWaitTimer();
                 })
                 .Play();
             
@@ -214,17 +204,15 @@ namespace com.tinycastle.StickerBooker
             var type = _request.Type;
             return type switch
             {
-                // TYPE_INTERSTITIAL => MaxSdk.IsInterstitialReady(INTERSTITIAL_AD_UNIT),
-                // TYPE_REWARD => MaxSdk.IsRewardedAdReady(REWARD_AD_UNIT),
+                TYPE_INTERSTITIAL => MaxSdk.IsInterstitialReady(INTERSTITIAL_AD_UNIT),
+                TYPE_REWARD => MaxSdk.IsRewardedAdReady(REWARD_AD_UNIT),
                 _ => false
             };
         }
 
         private void StartAdWaitTimer()
         {
-            // TODO
-            // _waitTimer = _request.WaitTime;
-            _waitTimer = 1f;
+            _waitTimer = _request.WaitTime;
             _adState = AdState.WAITING;
         }
 
@@ -283,16 +271,18 @@ namespace com.tinycastle.StickerBooker
             Log.Info($"Request {_request} concluded.");
         }
         
-        // private void OnAdRevenuePaidEvent(string s, MaxSdkBase.AdInfo adInfo)
-        // {
-        //     GM.Instance.Events.MakeEvent(GameEvents.AD_IMPRESSION_OR_REVENUE)
-        //         .Add("ad_platform", "AppLovin")
-        //         .Add("ad_source", adInfo.NetworkName)
-        //         .Add("ad_unit_name", adInfo.AdUnitIdentifier)
-        //         .Add("ad_format", adInfo.AdFormat)
-        //         .Add("value", adInfo.Revenue)
-        //         .Add("currency", "USD")
-        //         .SendEvent();
-        // }
+        private void OnAdRevenuePaidEvent(string s, MaxSdkBase.AdInfo adInfo)
+        {
+            Log.Info($"OnAdRevenuePaidEvent, unit: {adInfo}, revenue: {adInfo.Revenue}");
+            
+            GM.Instance.Events.MakeEvent(GameEvents.AD_IMPRESSION_OR_REVENUE)
+                .Add("ad_platform", "AppLovin")
+                .Add("ad_source", adInfo.NetworkName)
+                .Add("ad_unit_name", adInfo.AdUnitIdentifier)
+                .Add("ad_format", adInfo.AdFormat)
+                .Add("value", adInfo.Revenue)
+                .Add("currency", "USD")
+                .SendEvent();
+        }
     }
 }

@@ -27,6 +27,13 @@ namespace com.tinycastle.StickerBooker
             () =>
                 {
                     
+                }, () =>
+                {
+                    if (_cachedEntry?.Currency == GlobalConstants.STAMP_RESOURCE)
+                    {
+                        var floater = GM.Instance.Effects.MakeFloater(transform);
+                        floater.Set("Not enough\nkeys!", 200f);
+                    }
                 });
         }
 

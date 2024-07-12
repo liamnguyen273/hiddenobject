@@ -58,6 +58,7 @@ namespace com.tinycastle.StickerBooker
         public void OnNoButton()
         {
             Popup.Hide();
+            GM.Instance.MainGame.RequestGoHome();
         }
 
         public void OnRetryButton()
@@ -75,7 +76,7 @@ namespace com.tinycastle.StickerBooker
         
         private void OnNo()
         {
-            // Do nothing
+            
         }
     }
 }

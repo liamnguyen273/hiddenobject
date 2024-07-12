@@ -29,8 +29,16 @@ namespace com.tinycastle.StickerBooker
                 _hasAssetLoad = true;
             }
         }
+        
+        private void PerformLoadStem()
+        {
+            _stemManager.LoadStemsFor(_entry);
+            _hasStemLoad = true;
+        }
 
         private bool _hasAssetLoad = false;
+        private bool _hasStemLoad = false;
+        
         private void UpdateLoadAssetPack()
         {
             if (GameState != GameState.LOADING || !_hasAssetLoad)
@@ -40,8 +48,20 @@ namespace com.tinycastle.StickerBooker
 
             if (_assetHandle.FullyLoaded)
             {
-                OnAssetFullyLoaded();
                 _hasAssetLoad = false;
+            }
+        }
+
+        private void UpdateLoadStemPack()
+        {
+            if (GameState != GameState.LOADING || !_hasStemLoad)
+            {
+                return;
+            }
+
+            if (_stemManager.StemReady)
+            {
+                _hasStemLoad = false;
             }
         }
 

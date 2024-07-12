@@ -82,5 +82,29 @@
 		"currency": "real",
 		"buyResolution": "add_resource",
 		"resolutionData": "100 lookup&100 compass"
+	},
+	"free_keys": {
+		"id": "free_keys",
+		"listingName": "Free Keys",
+		"description": "10 Free Keys",
+		"type": "none",
+		"isConsumable": true,
+		"isIap": false,
+		"price": 0,
+		"currency": "none",
+		"buyResolution": "add_resource",
+		"resolutionData": "10 stamp"
+	},
+	"chest": {
+		"id": "chest",
+		"listingName": "Premium Chest",
+		"description": "Premium Chest",
+		"type": "none",
+		"isConsumable": true,
+		"isIap": false,
+		"price": 20,
+		"currency": "stamp",
+		"buyResolution": "chest",
+		"resolutionData": "none"
 	}
 }

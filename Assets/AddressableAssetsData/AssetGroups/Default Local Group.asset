@@ -65,6 +65,11 @@ MonoBehaviour:
     m_SerializedLabels:
     - avatars
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 76c69d5b7575b0849851c2db281bfd5d
+    m_Address: stem_definitions.csv
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ffdf4c6132f40594795b3fcd6a6121b4, type: 2}
   m_SchemaSet:

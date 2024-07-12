@@ -24,11 +24,18 @@ namespace com.tinycastle.StickerBooker
         private Dictionary<string, Sprite> _avatars;
         private List<string> _leaderboardNames;
 
+        private Dictionary<int, StemPackCsv> _stemDefs;
+
         private Dictionary<string, List<LevelEntry>> _sortedLevels;
         private Dictionary<string, Dictionary<int, LevelEntry>> _sortedLevelsWithDict;
         
         // Sprites and stuff
         private Dictionary<string, LevelAssetHandle> _levelAssetHandles;
+
+        public StemPackCsv GetStemDefinition(int number)
+        {
+            return _stemDefs.GetValueOrDefault(number, null);
+        }
         
         public LevelEntry GetLevelEntry(string levelName)
         {

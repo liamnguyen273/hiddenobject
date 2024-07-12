@@ -27,6 +27,9 @@ namespace com.tinycastle.StickerBooker
         [SerializeField] private Animator _fireworkLeft;
         [SerializeField] private Animator _fireworkRight;
 
+        [SerializeField] private GameObject _winTitle;
+        [SerializeField] private GameObject _loseTitle;
+
         private LevelEntry _currentEntry;
         private LevelEntry _nextEntry;
         private bool _thumbnailWait = false;
@@ -50,6 +53,9 @@ namespace com.tinycastle.StickerBooker
         {
             _winMode = mode;
             _isWin = isWin;
+            
+            _winTitle.SetActive(_isWin);
+            _loseTitle.SetActive(!_isWin);
         }
 
         protected override void InnateOnShowStart()
@@ -124,7 +130,7 @@ namespace com.tinycastle.StickerBooker
             {
                 if (_currentEntry != null)
                 {
-                    GM.Instance.RequestPlayLevel(_currentEntry.Id);
+                    GM.Instance.MainGame.PerformReplayLevel();
                 }
                 else
                 {

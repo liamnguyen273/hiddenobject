@@ -4,13 +4,28 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
+    implementation 'com.android.installreferrer:installreferrer:2.1' // Packages/appsflyer-unity-plugin/Editor/AppsFlyerDependencies.xml:10
+    implementation 'com.applovin:applovin-sdk:12.5.0' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:4
+    implementation 'com.appsflyer:adrevenue:6.9.1' // Assets/AppsFlyer/Editor/AppsFlyerAdRevenueDependencies.xml:4
+    implementation 'com.appsflyer:af-android-sdk:6.14.2' // Packages/appsflyer-unity-plugin/Editor/AppsFlyerDependencies.xml:6
+    implementation 'com.appsflyer:af-purchaseconnector-unity:2.0.1' // Assets/AppsFlyer/Editor/AppsFlyerPurchaseConnectorDependencies.xml:5
+    implementation 'com.appsflyer:purchase-connector:2.0.1' // Assets/AppsFlyer/Editor/AppsFlyerPurchaseConnectorDependencies.xml:6
+    implementation 'com.appsflyer:unity-adrevenue-generic-wrapper:6.9.1' // Assets/AppsFlyer/Editor/AppsFlyerAdRevenueDependencies.xml:5
+    implementation 'com.appsflyer:unity-wrapper:6.14.4' // Packages/appsflyer-unity-plugin/Editor/AppsFlyerDependencies.xml:8
+    // implementation 'com.google.android.gms:play-services-ads-identifier:16.0.0' // Packages/com.amanotes.gdk/Editor/UserProfileDependencies.xml:3
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:17
     implementation 'com.google.android.gms:play-services-base:18.2.0' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:17
+    implementation 'com.google.android.gms:play-services-basement:18.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:25
+    implementation 'com.google.android.ump:user-messaging-platform:2.+' // Assets/MaxSdk/AppLovin/Editor/Dependencies.xml:5
     implementation 'com.google.firebase:firebase-analytics:21.3.0' // Packages/com.google.firebase.analytics/Firebase/Editor/AnalyticsDependencies.xml:13
     implementation 'com.google.firebase:firebase-analytics-unity:11.6.0' // Packages/com.google.firebase.analytics/Firebase/Editor/AnalyticsDependencies.xml:18
     implementation 'com.google.firebase:firebase-app-unity:11.6.0' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:22
     implementation 'com.google.firebase:firebase-common:20.3.3' // Packages/com.google.firebase.app/Firebase/Editor/AppDependencies.xml:13
     implementation 'com.google.firebase:firebase-config:21.4.1' // Packages/com.google.firebase.remote-config/Firebase/Editor/RemoteConfigDependencies.xml:13
     implementation 'com.google.firebase:firebase-config-unity:11.6.0' // Packages/com.google.firebase.remote-config/Firebase/Editor/RemoteConfigDependencies.xml:20
+    implementation 'com.ironsource.sdk:mediationsdk:8.1.0' // Assets/LevelPlay/Editor/IronSourceSDKDependencies.xml:9
+    implementation 'com.ironsource.unity:adqualitysdk:7.20.0' // Assets/IronSourceAdQuality/Editor/IronSourceAdQualityDependencies.xml:17
+    implementation 'com.ironsource:adqualitysdk:7.20.0' // Assets/LevelPlay/Editor/IronSourceAdQualityDependencies.xml:9
 // Android Resolver Dependencies End
 **DEPS**}
 

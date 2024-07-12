@@ -28,11 +28,14 @@ namespace com.tinycastle.StickerBooker
     
     public partial class MainGameManager : MonoManagerBase
     {
-        private const float TIME_ATTACK_TIME = 60;
-        private const float TIME_ATTACK_TIME_BONUS = 30;
+        private const float TIME_ATTACK_TIME = 105;
+        private const float TIME_ATTACK_TIME_BONUS = 45;
+        private const int REVIVE_COUNT = 2;
+        private const int REVIVE_COUNT_TIME_ATTACK = 1;
         
         [Header("Level components")] 
-        [SerializeField] private RectTransform _overallRect;
+        [SerializeField] private RectTransform[] _overallRects;
+        [SerializeField] private RectTransform _bannerRect;
         [SerializeField] private RectTransform _levelRect;
         [SerializeField] private Transform _appearance;
         [SerializeField] private MainGameHud _hud;
@@ -54,6 +57,7 @@ namespace com.tinycastle.StickerBooker
         [Header("Others")] 
         [SerializeField] private StemManager _stemManager;
         [SerializeField] private Slider _stemProgress;
+        [SerializeField] private RectTransform _stemIcon;
         
         // Level book-keepers
         private string _currentId = null;
@@ -72,6 +76,7 @@ namespace com.tinycastle.StickerBooker
 
         [SerializeField] private TextLocalizer _tryCountText;
         private int _tryCount;
+        private int _reviveCount;
 
         public int TryCount
         {
@@ -117,8 +122,18 @@ namespace com.tinycastle.StickerBooker
             }
             
             MultiplayerModule.UpdateTimer(dt);
-            
-            UpdateLoadAssetPack();
+
+            if (GameState == GameState.LOADING && (_hasAssetLoad || _hasStemLoad))
+            {
+                UpdateLoadAssetPack();
+                UpdateLoadStemPack();
+
+                if (!_hasAssetLoad && !_hasStemLoad)
+                {
+                    OnAssetFullyLoaded();
+                }
+            }
+
         }
 
         private void UpdateGameTimer(float dt)
@@ -137,11 +152,17 @@ namespace com.tinycastle.StickerBooker
         public DynamicSticker GetRandomValidPickupableDynamicSticker()
         {
             var list = _dynamicStickers.Where(x => x.HasLink && x.LogicalInteractable && !x.Dragging).ToList();
-            return list.Count == 0 ? null : list[GM.Instance.Rng.GetInteger(0, list.Count)];
+            return list.Count == 0 ? null : list[GM.Instance.Rng.GetInteger(0, Mathf.Min(3, list.Count))];
         }
 
         public void OnStickerClickFailed(PointerEventData eventData)
         {
+            // Do nothing if time or multi
+            if (TimeAttackModule.InUse || MultiplayerModule.InUse)
+            {
+                return;
+            }
+            
             if (TryCount == 0)
             {
                 ShowPopupOutOfTries();
@@ -149,10 +170,7 @@ namespace com.tinycastle.StickerBooker
             }
             
             GM.Instance.Effects.MakeXMark(eventData.pressPosition);
-            if (!TimeAttackModule.InUse && !MultiplayerModule.InUse)
-            {
-                TryCount = Mathf.Max(0, TryCount - 1);
-            }
+            TryCount = Mathf.Max(0, TryCount - 1);
             
             if (TryCount == 0)
             {
@@ -162,20 +180,37 @@ namespace com.tinycastle.StickerBooker
 
         private void ShowPopupOutOfTries()
         {
+            if (_reviveCount <= 0)
+            {
+                var completed = EvaluateCompletedStickers();
+                EndGame(completed);
+                return;
+            }
+            
             var popup = GM.Instance.Popups.GetPopup<PopupBehaviourOutOfTries>(out var behaviour);
+            behaviour.SetContent(_reviveCount == 1 ? "Final Revive?" : "Revive?", $"You ran out of tries!\nWatch an ad to get 3 more?{(_reviveCount == 1 ? "\n(This is your final revive)" : "")}");
             behaviour.SetOnYesCallback(() =>
             {
                 TryCount += TRY_COUNT;
+                _reviveCount -= 1;
             }, PerformReplayLevel);
             popup.Show();
         }
         
         private void ShowPopupOutOfTime()
         {
+            if (_reviveCount <= 0)
+            {
+                var completed = EvaluateCompletedStickers();
+                EndGame(completed);
+                return;
+            }
+            
             var popup = GM.Instance.Popups.GetPopup<PopupBehaviourOutOfTime>(out var behaviour);
             behaviour.SetOnYesCallback(() =>
             {
                 TimeAttackModule.PlayCountdownStart(TIME_ATTACK_TIME_BONUS);
+                _reviveCount -= 1;
             }, PerformReplayLevel);
             behaviour.SetOnNoCallback(() =>
             {
@@ -231,6 +266,7 @@ namespace com.tinycastle.StickerBooker
                 CLog.Log($"Stem index: {stemIndex}");
                 if (stemIndex >= 0)
                 {
+                    AudioManager.PlaySound(LibrarySounds.Unlock);
                     _stemManager.Play(false, stemIndex);
                 }
                 
@@ -349,7 +385,7 @@ namespace com.tinycastle.StickerBooker
             popup.Show();
         }
 
-        private void PerformReplayLevel()
+        public void PerformReplayLevel()
         {
             GM.Instance.Loading.RequestLoad(new ImmediateProgressItem(), () =>
             {
@@ -378,6 +414,7 @@ namespace com.tinycastle.StickerBooker
         {
             _saveProgressMeter = 0;
             TryCount = TRY_COUNT;
+            _reviveCount = !_entry.IsTimeAttack ? REVIVE_COUNT : REVIVE_COUNT_TIME_ATTACK;
             
             TimeAttackModule.SetUse(_entry.IsTimeAttack);
             MultiplayerModule.SetUse(_entry.IsMultiplayer, _entry);
@@ -675,7 +712,7 @@ namespace com.tinycastle.StickerBooker
         {
             // First one is always played
             const int incomingStemCount = 7;
-            var step = total / (incomingStemCount + 1);
+            var step = total / (incomingStemCount);
             
             var d = filledCount / step;
             var m = filledCount % step;

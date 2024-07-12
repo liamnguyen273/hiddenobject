@@ -5,6 +5,7 @@ using System.Linq;
 using System.Resources;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using Random = System.Random;
 
 namespace com.tinycastle.StickerBooker
 {
@@ -73,15 +74,6 @@ namespace com.tinycastle.StickerBooker
                 return false;
             }
             
-            if (!IAPUsable)
-            {
-                Log.Warn("Unity IAP is not initialized. Returning failed");
-                Log.Warn("Please check for service at relevant screen start.");
-                var action = failedAction ?? GetDefaultFailedCallback();
-                action?.Invoke();
-                return false;
-            }
-
             if (_currentPurchaseId != null)
             {
                 Log.Warn("Currently handling another purchase. Returning failed.");
@@ -100,11 +92,24 @@ namespace com.tinycastle.StickerBooker
                 return false;
             }
             
-            if (entry.IsIAP && _controller.products.WithID(productId) == null)
+            if (entry.IsIAP)
             {
-                Log.Warn($"Unity IAP does contains product id \"{productId}\". Returning failed.");
-                var action = failedAction ?? GetDefaultFailedCallback();
-                action?.Invoke();
+                if (!IAPUsable)
+                {
+                    Log.Warn("Unity IAP is not initialized. Returning failed");
+                    Log.Warn("Please check for service at relevant screen start.");
+                    var action = failedAction ?? GetDefaultFailedCallback();
+                    action?.Invoke();
+                    return false;
+                }
+
+                if (_controller.products.WithID(productId) == null)
+                {
+                    Log.Warn($"Unity IAP does not contains product id \"{productId}\". Returning failed.");
+                    var action = failedAction ?? GetDefaultFailedCallback();
+                    action?.Invoke();
+                    return false;
+                }
             }
             
             Log.Info($"Try purchasing product with id \"{productId}\" (IAP: {entry.IsIAP})." +
@@ -123,6 +128,12 @@ namespace com.tinycastle.StickerBooker
             var currency = entry.Currency;
             var price = entry.Price;
             var current = _playerManager.GetResource(currency);
+
+            if (currency == "none")
+            {
+                FinalizePurchase(_currentPurchaseId, true);
+                return;
+            }
             
             if (current < price)
             {
@@ -209,66 +220,89 @@ namespace com.tinycastle.StickerBooker
             Log.Info($"Resolving resolution \"{resolution}\" with params: \"{resolutionParam}\"");
 
             shouldShowCongrats = true;
-            
             switch (resolution)
             {
                 case GlobalConstants.BUY_RESOLUTION_SET_OWN:
                     GM.Instance.Player.SetAsOwn(itemId);
-                    
+                    break;
+                case GlobalConstants.BUY_RESOLUTION_CHEST:
+                    var rewards = RollRewards();
+                    ResolveAddResources(out shouldShowCongrats, rewards);
                     break;
                 case GlobalConstants.BUY_RESOLUTION_ADD_RESOURCE:
                     var tokens = resolutionParam.Split("&", StringSplitOptions.RemoveEmptyEntries);
-                    
-                    // TODO
-                    var items = new List<string>();
-                    var counts = new List<int>();
-                    foreach (var token in tokens)
-                    {
-                        var subTokens = token.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                        if (subTokens.Length != 2)
-                        {
-                            Log.Error($"Cannot resolve add resource \"{token}\"");
-                            continue;
-                        }
-
-                        var success = int.TryParse(subTokens[0], out var count);
-
-                        if (!success)
-                        {
-                            Log.Error($"Cannot parse count of resource (\"{count}\")");
-                            continue;
-                        }
-
-                        var resource = subTokens[1];
-                        Log.Info($"Will add {count} of \'{resource}\".");
-
-                        var leftCount = count;
-                        
-                        if  (leftCount < 10)
-                        {
-                            items.AddRange(Enumerable.Repeat(resource, leftCount));
-                            counts.AddRange(Enumerable.Repeat(1, leftCount));
-                        }
-                        else
-                        {
-                            while (leftCount > 0)
-                            {
-                                var amount = Math.Min(10, leftCount);
-                                items.Add(resource);
-                                counts.Add(amount);
-                                leftCount -= amount;
-                            }
-                        }
-                    }
-
-                    shouldShowCongrats = false;
-                    GM.Instance.ResolveAnimateAddItems(items.ToArray(), counts.ToArray(), true);
-
+                    ResolveAddResources(out shouldShowCongrats, tokens);
                     break;
                 default:
                     Log.Warn($"Unknown buy resolution: {resolution}. Please check.");
                     break;
             }
+        }
+
+        private void ResolveAddResources(out bool shouldShowCongrats, string[] tokens)
+        {
+            var items = new List<string>();
+            var counts = new List<int>();
+            foreach (var token in tokens)
+            {
+                var subTokens = token.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                if (subTokens.Length != 2)
+                {
+                    Log.Error($"Cannot resolve add resource \"{token}\"");
+                    continue;
+                }
+
+                var success = int.TryParse(subTokens[0], out var count);
+
+                if (!success)
+                {
+                    Log.Error($"Cannot parse count of resource (\"{count}\")");
+                    continue;
+                }
+
+                var resource = subTokens[1];
+                Log.Info($"Will add {count} of \'{resource}\".");
+
+                var leftCount = count;
+                        
+                if  (leftCount < 10)
+                {
+                    items.AddRange(Enumerable.Repeat(resource, leftCount));
+                    counts.AddRange(Enumerable.Repeat(1, leftCount));
+                }
+                else
+                {
+                    while (leftCount > 0)
+                    {
+                        var amount = Math.Min(10, leftCount);
+                        items.Add(resource);
+                        counts.Add(amount);
+                        leftCount -= amount;
+                    }
+                }
+            }
+
+            shouldShowCongrats = false;
+            GM.Instance.ResolveAnimateAddItems(items.ToArray(), counts.ToArray(), true);
+        }
+        
+        private static string[] RollRewards()
+        {
+            var ranLookups = UnityEngine.Random.Range(2, 4);
+            var ranSearch = UnityEngine.Random.Range(2, 4);
+
+            var rewards = new List<string>();
+            if (ranLookups > 0)
+            {
+                rewards.Add($"{ranLookups} {GlobalConstants.POWER_LOOKUP}");
+            }     
+            
+            if (ranSearch > 0)
+            {
+                rewards.Add($"{ranSearch} {GlobalConstants.POWER_COMPASS}");
+            }
+
+            return rewards.ToArray();
         }
     }
 }

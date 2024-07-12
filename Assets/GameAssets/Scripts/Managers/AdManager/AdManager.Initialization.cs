@@ -9,10 +9,10 @@ namespace com.tinycastle.StickerBooker
         
         protected override void StartInitializationBehaviour()
         {
-            // MaxSdkCallbacks.OnSdkInitializedEvent += OnMaxInitialized;
-            //
-            // MaxSdk.SetSdkKey(SDK_KEY);
-            // MaxSdk.InitializeSdk();
+            MaxSdkCallbacks.OnSdkInitializedEvent += OnMaxInitialized;
+            
+            MaxSdk.SetSdkKey(SDK_KEY);
+            MaxSdk.InitializeSdk();
             EndInitialize(true);
         }
 
@@ -26,14 +26,13 @@ namespace com.tinycastle.StickerBooker
             InitializeBannerAds();
         }
         
-        // private void OnMaxInitialized(MaxSdkBase.SdkConfiguration sdkConfiguration)
-        // {
-        //     InitializeInterstitialAds();
-        //     InitializeRewardedAds();
-        //     // InitializeBannerAds(); This cause hangs since requires remote config to set the theme
-        //     
-        //     EndInitialize(true);
-        // }
+        private void OnMaxInitialized(MaxSdkBase.SdkConfiguration sdkConfiguration)
+        {
+            InitializeInterstitialAds();
+            InitializeRewardedAds();
+            InitializeBannerAds();
+            EndInitialize(true);
+        }
 
         private void OnOwn(string id)
         {

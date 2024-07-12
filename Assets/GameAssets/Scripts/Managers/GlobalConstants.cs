@@ -13,6 +13,7 @@ namespace com.tinycastle.StickerBooker
         
         public const string BUY_RESOLUTION_ADD_RESOURCE = "add_resource";
         public const string BUY_RESOLUTION_SET_OWN = "set_own";
+        public const string BUY_RESOLUTION_CHEST = "chest";
 
         public const string NORMAL_LEVEL_BUNDLE = "normal";
         public const string TIME_ATTACK_LEVEL_BUNDLE = "time_attack";

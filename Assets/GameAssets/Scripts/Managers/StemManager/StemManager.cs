@@ -4,15 +4,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using com.brg.Common.Logging;
 using UnityEngine;
 
 namespace com.tinycastle.StickerBooker
 {
     public class StemManager : MonoBehaviour, IStemInstrumentPlayer
     {
-        [SerializeField] private StemData[] _stemDatas;
         [SerializeField] private AudioSource _audioSourcePrefab;
+        [SerializeField] private OfflinePlayingStemData[] _fallbacks;
+        [SerializeField] private float _downloadTimeout = 20f;
 
+        private Dictionary<int, IPlayingStemData> _datas = new();
+        
         //Quick Pool implementation
         private List<AudioSource> _audioSourcePool = new List<AudioSource>();
         private List<AudioSource> _audioSourceUsing = new List<AudioSource>();
@@ -21,9 +26,29 @@ namespace com.tinycastle.StickerBooker
 
         private const float DEFAULT_VOLUME = 0.6f;
         private const float FADE_TIME = 1.5f;
+        
+        private IPlayingStemData _currentStemData;
 
-        private LevelEntry _entry;
-        private StemData _currentStemData;
+        public bool StemReady
+        {
+            get
+            {
+                if (_currentStemData == null)
+                {
+                    LogObj.Default.Error("Current stem data is null, cannot query readiness.");
+                    return true;
+                }
+
+                if (_currentStemData is StreamingPlayingStemData streamingPlayingStemData)
+                {
+                    return streamingPlayingStemData.LoadCompleted;
+                }
+
+                return true;
+            }
+        }
+
+        public float DownloadProgress => _currentStemData?.DownloadProgress ?? 1f;
 
         private void Update() //Test code
         {
@@ -33,42 +58,90 @@ namespace com.tinycastle.StickerBooker
             }
         }
 
-        public void Deinitialize()
+        public void Deactivate()
         {
             ClearAllAudioSource();
         }
-        
-        public void SetLevel(LevelEntry entry)
+
+        public void LoadStemsFor(LevelEntry entry)
         {
-            _entry = entry;
+            var stem = GetPlayingStemData(entry);
+            
+            if (stem is StreamingPlayingStemData streamingPlayingStemData)
+            {
+                streamingPlayingStemData.LaunchDownloadTask(_downloadTimeout);
+            }
+
+            _currentStemData = stem;
         }
 
-        private StemData ResolveStemData()
+        private IPlayingStemData GetPlayingStemData(LevelEntry entry)
         {
-            if (_entry == null) return _stemDatas[0];
+            IPlayingStemData data = null;
+            var number = entry.SortOrder % 14;
 
-            foreach (var stemData in _stemDatas)
+            // From existing
+            if (_datas.TryGetValue(number, out var cachedData))
             {
-                if (stemData.ResolvePlayForLevel(_entry))
+                data = cachedData;
+                return data;
+            }
+            
+            // Make new from: fallback
+            foreach (var fallback in _fallbacks)
+            {
+                if (number == fallback.PackNumber)
                 {
-                    return stemData;
+                    data = fallback;
+                    break;
+                }
+            }
+            
+            if (data == null)
+            {
+                // Get from data
+                var def = GM.Instance.Data.GetStemDefinition(number);
+                if (def != null)
+                {
+                    data = new StreamingPlayingStemData(def);
                 }
             }
 
-            return _stemDatas[0];
+            if (data != null)
+            {
+                _datas.Add(number, data);
+                return data;
+            }
+            else return null;
         }
 
-        public void Initialize()
+        private int _currentFallback = 0;
+        public void Activate()
         {
             ClearAllAudioSource();
 
+            var hasNoStem = false;
+
             if (_currentStemData == null)
             {
-                _currentStemData = ResolveStemData();
-                _currentLayerIndex = 0;
+                hasNoStem = true;
+                LogObj.Default.Info("_currentStemData is null, will use a fallback.");
+            }
+            else if (_currentStemData is StreamingPlayingStemData { Usable: false })
+            {
+                hasNoStem = true;
+                LogObj.Default.Info("_currentStemData failed to download stems in time, will use a fallback.");
+            }
+
+            if (hasNoStem)
+            {
+                _currentStemData = _fallbacks[_currentFallback];
+                
+                _currentFallback += 1;
+                _currentFallback %= _fallbacks.Length;
             }
             
-            foreach (AudioClip clip in _currentStemData.layers)
+            foreach (AudioClip clip in _currentStemData.GetAllClips())
             {
                 AudioSource audioSource;
                 if (_audioSourcePool.Count == 0)
@@ -79,6 +152,7 @@ namespace com.tinycastle.StickerBooker
                 {
                     audioSource = _audioSourcePool.First();
                     _audioSourcePool.Remove(audioSource);
+                    audioSource.gameObject.SetActive(true);
                 }
                 _audioSourceUsing.Add(audioSource);
                 audioSource.clip = clip;
@@ -175,7 +249,7 @@ namespace com.tinycastle.StickerBooker
                 return;
             }
 
-            if (_currentLayerIndex < _currentStemData.LayerCount)
+            if (_currentLayerIndex < _currentStemData.ClipCount)
             {
                 _audioSourceUsing[_currentLayerIndex++].volume = DEFAULT_VOLUME;
             }

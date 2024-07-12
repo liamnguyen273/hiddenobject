@@ -205,16 +205,17 @@ namespace com.tinycastle.StickerBooker
 
         public void SimulateEndDrag(bool byPlayer, bool forceStickToTarget)
         {
-            if (!_dragging || (_dragByPlayer != byPlayer) || !LogicalInteractable) return;
-            
-            if (forceStickToTarget || CheckAlignTarget())
-            {
-                StickToTarget();
-            }
-            else
-            {
-                MoveBackToOriginalPosition();
-            }
+            // StickToTarget();
+            // if (!_dragging || (_dragByPlayer != byPlayer) || !LogicalInteractable) return;
+            //
+            // if (forceStickToTarget || CheckAlignTarget())
+            // {
+            //     StickToTarget();
+            // }
+            // else
+            // {
+            //     MoveBackToOriginalPosition();
+            // }
         }
 
         private bool BeginDragHelper()

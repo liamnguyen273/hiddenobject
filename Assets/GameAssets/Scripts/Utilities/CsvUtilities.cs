@@ -1,15 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using com.brg.Common.Logging;
+using com.tinycastle.StickerBooker;
 using UnityEngine;
 
 namespace com.brg.Utilities
 {
     public static class CsvUtilities
     {
+        public static void ProcessStemDefinitionCsv(string content, out Dictionary<int, StemPackCsv> stemPacks)
+        {
+            var lines = content.Split(new[] { "\n", "\r", "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+            stemPacks = new();
+            foreach (var line in lines)
+            {
+                var tokens = line.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                
+                if (tokens.Length != 7) continue;
+                if (int.TryParse(tokens[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out var pack)
+                    && int.TryParse(tokens[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var order)
+                    && !string.IsNullOrWhiteSpace(tokens[2])
+                    && !string.IsNullOrWhiteSpace(tokens[6]))
+                {
+                    var item = new StemItemHandle()
+                    {
+                        Order = order,
+                        FileName = tokens[2],
+                        Url = tokens[6]
+                    };
+
+                    if (!stemPacks.ContainsKey(pack))
+                    {
+                        stemPacks[pack] = new StemPackCsv()
+                        {
+                            Pack = pack,
+                        };
+                    }
+
+                    stemPacks[pack].Items.Add(item);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            foreach (var (pack, csv) in stemPacks)
+            {
+                csv.Items.Sort((a, b) => a.Order - b.Order);
+            }
+        }
+        
         public static bool ProcessPositionCsv(string content, out Dictionary<string, int> indexedStickers,
             out Dictionary<string, Vector2> positions)
         {

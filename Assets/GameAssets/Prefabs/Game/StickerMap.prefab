@@ -177,8 +177,8 @@ MonoBehaviour:
   _scrollContent: {fileID: 0}
   _fullMapParticleSystem: {fileID: 2126670263689839947}
   _outlineImage: {fileID: 8058945357612735243}
-  _contentPadX: 252
-  _contentPadY: 402
+  _contentPadX: 360
+  _contentPadY: 540
   _fillTime: 10
   _poolCount: 110
 --- !u!222 &9120678134147362860

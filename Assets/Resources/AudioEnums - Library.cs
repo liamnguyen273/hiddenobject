@@ -2,7 +2,8 @@
         Button,
         Congrats,
         Sticker,
-        Failed
+        Failed,
+        Unlock
     }
     public enum LibraryMusic {
         LevelMusic,

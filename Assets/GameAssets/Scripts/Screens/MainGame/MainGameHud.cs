@@ -49,7 +49,7 @@ namespace com.tinycastle.StickerBooker
             _noAdButton.SetActive(!GM.Instance.Player.Own(GlobalConstants.NO_AD_ITEM_NAME));
             GM.Instance.Player.OnOwnEvent += OnOwn;
             
-            _cheatButton.SetActive(GM.Instance.IsCheat);
+            _cheatButton.SetActive(false);
             _hideUIButton.SetActive(GM.Instance.IsCheat);
             
             base.Activate();
@@ -158,6 +158,11 @@ namespace com.tinycastle.StickerBooker
         public void OnCompassButton()
         {
             GM.Instance.MainGame.RequestCompassPowerup();
+        }
+
+        public void OnTutorialButton()
+        {
+            GM.Instance.Popups.GetPopup("popup_tutorial_note").Show();
         }
 
         public void UpdateProgress(int current, int total)
