@@ -68,8 +68,8 @@ namespace com.tinycastle.StickerBooker
             _interShowing = true;
             _sessionAdCounter++;
 
-            var request = new AdRequest(AdManager.TYPE_INTERSTITIAL, ConcludeAd, ConcludeAd);
-            GM.Instance.Ad.RequestAd(request);
+            // var request = new AdRequest(AdManager.TYPE_INTERSTITIAL, ConcludeAd, ConcludeAd);
+            // GM.Instance.Ad.RequestAd(request);
         }
 
         private void ConcludeAd()

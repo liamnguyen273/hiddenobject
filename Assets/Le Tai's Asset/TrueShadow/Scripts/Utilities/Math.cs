@@ -23,6 +23,5 @@ public static class Math
         var c   = Cos(rad);
         return new Vector2(c * v.x - s * v.y,
                            s * v.x + c * v.y);
-    }
-}
+    } }
 }
